@@ -10,7 +10,7 @@ def check_and_merge_my_dict(dict1, dict2):
     for item in inner_keys:
         try:
             if dict2[item] is not None:
-                print('Warning', item, 'is doubled')
+                print('Warning, key - ', item, 'is doubled')
         except KeyError:
             pass
     dict1.update(dict2)
