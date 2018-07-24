@@ -8,7 +8,7 @@ sequence = {'A': 'А', 'B': 'Б', 'C': 'К',
             'X': 'КС', 'Y': 'У', 'Z': 'З'}
 
 reversed_sequence = {'А': 'A', 'Б': 'B', 'В': 'V', 'Г': 'G', 'Д': 'D', 'Е': 'E',
-                     'Ё': 'YO', 'Ж': 'J', 'З':'Z', 'И': 'I', 'Й': 'YI', 'К': 'K',
+                     'Ё': 'YO', 'Ж': 'J', 'З': 'Z', 'И': 'I', 'Й': 'YI', 'К': 'K',
                      'Л': 'L', 'М': 'M', 'Н': 'N', 'О': 'O', 'П': 'P', 'Р': 'R',
                      'С': 'S', 'Т': 'T', 'У': 'U', 'Ф': 'F', 'Х': 'H', 'Ч': 'CH',
                      'Ц': 'CE', 'Ш': 'SH', 'Щ': 'SH', 'Э': 'E', 'Ю': 'UY', 'Я': 'YA',
@@ -17,7 +17,7 @@ reversed_sequence = {'А': 'A', 'Б': 'B', 'В': 'V', 'Г': 'G', 'Д': 'D', 'Е'
 
 def translite():
     try:
-        string = input()
+        string = input('Введите строку на английском или русском языке: ')
     except IOError:
         string = 'Стандартная строка для перевода'
 
@@ -26,9 +26,14 @@ def translite():
         try:
             example += sequence[item.upper()]
         except KeyError:
-            example += reversed_sequence[item.upper()]
+            try:
+                example += reversed_sequence[item.upper()]
+            except KeyError:
+                exit(0)
 
     return example
 
 
+# if __name__ == 'main':
+    # print(translite())
 print(translite())
