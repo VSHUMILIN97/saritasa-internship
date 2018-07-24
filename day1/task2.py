@@ -1,6 +1,3 @@
-# IDEAS
-# Merge?
-# Using update with IF statements
 import logging
 logging.basicConfig(level=logging.DEBUG)
 first = {'id': 15, 'uno': 1, 'bottle': 'neck'}
@@ -16,4 +13,5 @@ def check_and_merge_my_dict(dict1, dict2):
     return dict1
 
 
-print(check_and_merge_my_dict(first, second))
+if __name__ == '__main__':
+    print(check_and_merge_my_dict(first, second))

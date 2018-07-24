@@ -1,7 +1,3 @@
-# IDEAS:
-# Unicode numbers
-# Sorting/Unsorting strings
-
 sequence = {'A': 'А', 'B': 'Б', 'C': 'К',
             'D': 'Д', 'E': 'Е', 'F': 'Ф', 'G': 'Г', 'H': 'Х',
             'I': 'И', 'J': 'Ж', 'K': 'К', 'L': 'Л', 'M': 'М',
@@ -44,6 +40,6 @@ def translite():
     return example
 
 
-# if __name__ == 'main':
-    # print(translite())
-print(translite())
+if __name__ == '__main__':
+    print(translite())
+

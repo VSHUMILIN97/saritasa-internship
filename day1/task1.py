@@ -1,6 +1,3 @@
-# IDEAS:
-# Iterate through the whole object (non-effective)
-
 import random
 names = {'Alex': 0, 'Bob': 0, 'John': 0, 'Cena': 0, 'Doe': 0, 'Michael': 0}
 boolean = {'True': 0, 'False': 0}
@@ -43,6 +40,7 @@ def updating_list():
                 dicts.append({'key': rec, 'value': every_key, 'count': appendables[every_key]})
 
 
-updating_list()
-print(dicts)
+if __name__ == '__main__':
+    updating_list()
+    print(dicts)
 
