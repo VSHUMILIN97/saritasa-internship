@@ -1,2 +1,2 @@
-# saritasa-internship
+# Saritasa internship
 ## Working just fine
