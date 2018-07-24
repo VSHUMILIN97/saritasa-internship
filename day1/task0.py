@@ -1,8 +1,9 @@
+import os
 sequence = {'A': 'А', 'B': 'Б', 'C': 'К',
             'D': 'Д', 'E': 'Е', 'F': 'Ф', 'G': 'Г', 'H': 'Х',
             'I': 'И', 'J': 'Ж', 'K': 'К', 'L': 'Л', 'M': 'М',
             'N': 'Н', 'O': 'О', 'P': 'П', 'Q': 'КЬ', 'R': 'Р',
-            'S': 'C', 'T': 'Т', 'U': 'У', 'V': 'B', 'W': 'ВЬ',
+            'S': 'C', 'T': 'Т', 'U': 'У', 'V': 'В', 'W': 'ВЬ',
             'X': 'КС', 'Y': 'У', 'Z': 'З'}
 
 reversed_sequence = {'А': 'A', 'Б': 'B', 'В': 'V', 'Г': 'G', 'Д': 'D', 'Е': 'E',
@@ -13,33 +14,42 @@ reversed_sequence = {'А': 'A', 'Б': 'B', 'В': 'V', 'Г': 'G', 'Д': 'D', 'Е'
                      'Ь': '', 'Ъ': '', 'Ы': 'II'}
 
 
-def translite():
+def transliteration():
     try:
-        string = input('Введите строку на английском или русском языке: ')
-    except IOError:
-        string = 'Стандартная строка для перевода'
-
-    example = ''
-    for item in string:
+        get_language = os.getenv('LANG')
+    except OSError:
+        get_language = 'ru'
+    if get_language.startswith('ru'):
         try:
-            element = sequence[item.upper()]
-            if item.islower():
-                example += element.lower()
+            input_from_user = input('Введите строку на английском или русском языке: ')
+        except IOError:
+            input_from_user = 'Стандартная строка для перевода'
+    else:
+        try:
+            input_from_user = input('Enter a prompt in English or Russian: ')
+        except IOError:
+            input_from_user = 'Default prompt for the translation'
+    #
+    output_sring = ''
+    for each_char in input_from_user:
+        try:
+            rus_char = sequence[each_char.upper()]
+            if each_char.islower():
+                output_sring += rus_char.lower()
             else:
-                example += element
+                output_sring += rus_char
         except KeyError:
             try:
-                eng_element = reversed_sequence[item.upper()]
-                if item.islower():
-                    example += eng_element.lower()
+                eng_char = reversed_sequence[each_char.upper()]
+                if each_char.islower():
+                    output_sring += eng_char.lower()
                 else:
-                    example += eng_element
+                    output_sring += eng_char
             except KeyError:
-                example += item
-
-    return example
+                output_sring += each_char
+    return output_sring
 
 
 if __name__ == '__main__':
-    print(translite())
+    print(transliteration())
 
