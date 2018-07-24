@@ -26,12 +26,20 @@ def translite():
     example = ''
     for item in string:
         try:
-            example += sequence[item.upper()]
+            element = sequence[item.upper()]
+            if item.islower():
+                example += element.lower()
+            else:
+                example += element
         except KeyError:
             try:
-                example += reversed_sequence[item.upper()]
+                eng_element = reversed_sequence[item.upper()]
+                if item.islower():
+                    example += eng_element.lower()
+                else:
+                    example += eng_element
             except KeyError:
-                exit(0)
+                example += item
 
     return example
 
