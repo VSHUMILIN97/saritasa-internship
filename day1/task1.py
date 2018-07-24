@@ -34,7 +34,8 @@ def updating_list():
         except KeyError:
             appendables = names_dict[rec]
         for every_key in appendables:
-            dicts.append({'key': rec, 'value': every_key, 'count': appendables[every_key]})
+            if appendables[every_key] > 1:
+                dicts.append({'key': rec, 'value': every_key, 'count': appendables[every_key]})
 
 
 updating_list()
