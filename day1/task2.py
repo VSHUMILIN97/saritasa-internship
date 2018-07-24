@@ -8,11 +8,8 @@ second = {'id': 12, 'duos': 2, 'bottle': 'wine'}
 def check_and_merge_my_dict(dict1, dict2):
     inner_keys = list(dict1.keys())
     for item in inner_keys:
-        try:
-            if dict2[item] is not None:
-                print('Warning, key - ', item, 'is doubled')
-        except KeyError:
-            pass
+        if dict2.get(item) is not None:
+            print('Warning, key -', item, 'is doubled')
     dict1.update(dict2)
     return dict1
 
