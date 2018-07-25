@@ -1,9 +1,31 @@
+"""This script validate template strings.
+
+Example of contents on which will basis the string structure:
+    {
+        'id': 1,
+        'name': 'Alice',
+        'action': 'Attack Bob'
+    }
+
+It provides users with errors that will describe the problem in template.
+
+"""
 import logging
 from faker import Faker
 from string import Template
 
 
 def build_string(structure, user_prompt):
+    """
+    This function builds a string based on user template.
+    If template doesn't fit to the current structure
+    error will be raised.
+
+    :param structure: Dictionary that provides Template structure
+    :param user_prompt: String that provides text for Template Builder
+    :returns:
+        The return value. True for success, False otherwise.
+    """
     example = Template(user_prompt.replace('{', '${'))
     try:
         prepared_string = example.substitute(name=structure['name'],
