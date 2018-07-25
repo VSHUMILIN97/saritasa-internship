@@ -1,3 +1,6 @@
+"""This script merging two dicts by keys.
+   It displays a warning in case if dicts contains duplicating keys
+"""
 import logging
 logging.basicConfig(level=logging.DEBUG)
 first = {'id': 15, 'uno': 1, 'bottle': 'neck'}
@@ -5,10 +8,18 @@ second = {'id': 12, 'duos': 2, 'bottle': 'wine'}
 
 
 def check_and_merge_my_dict(dict1, dict2):
-    inner_keys = list(dict1.keys())
-    for item in inner_keys:
-        if dict2.get(item) is not None:
-            logging.info('Warning, key - ' + item + ' is doubled')
+    """
+    Function that checks whether there are common keys for
+    two dictionaries, warning if so and merge them anyways
+
+    :param dict1: dictionary from user
+    :param dict2: dictionary from user
+    :return:
+        dict = dictionary that contains all the merged data
+    """
+    for key in dict1.keys():
+        if key in dict2.keys():
+            logging.info(f"Current key - '{key}' is doubled")
     dict1.update(dict2)
     return dict1
 
