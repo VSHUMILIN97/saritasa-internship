@@ -71,7 +71,8 @@ def setup_user_environment():
     Function that collects current language
     settings from the user's environment
 
-    :return: string value that contains current language settings
+    :return:
+        string: value that contains current language settings
     """
     try:
         user_language = os.getenv('LANG')
@@ -86,7 +87,7 @@ def get_string_from_user(current_language):
 
     :param current_language: string value that receive language settings
     :returns:
-        string: string value that contains user prompt for the transliteration
+        string: value that contains user prompt for the transliteration
     """
     if current_language.startswith('ru'):
         user_prompt = input('Введите строку на английском или русском языке: ')
@@ -101,7 +102,7 @@ def transliteration():
     NOTE: There is a global dictionary that contains prepared data.
 
     :returns:
-        string: string to output
+        string: prompt to output
     """
     output_sring = ''
     for each_char in get_string_from_user(setup_user_environment()):
