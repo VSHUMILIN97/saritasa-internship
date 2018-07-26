@@ -90,7 +90,7 @@ def get_arguments(args):
                         metavar='P',
                         type=str,
                         help='a string contains absolute path to file')
-    return parser.parse_args()
+    return parser.parse_args(args)
 
 
 if __name__ == '__main__':
