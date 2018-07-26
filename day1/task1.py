@@ -5,6 +5,7 @@ import csv
 import logging
 import argparse
 import collections
+import sys
 logging.basicConfig(level=logging.DEBUG)
 
 
@@ -76,7 +77,7 @@ def extending_data_with_keywords(generated_dict, keyword_list):
     return core_list
 
 
-def get_arguments():
+def get_arguments(args):
     """
     Function that fetch arguments from the command line
 
@@ -93,6 +94,6 @@ def get_arguments():
 
 
 if __name__ == '__main__':
-    dictionaries, dict_keys = parse_csv(get_arguments())
+    dictionaries, dict_keys = parse_csv(get_arguments(sys.argv[1:]))
     parsed_dict, keywords = count_entries(dictionaries, dict_keys)
     logging.info(extending_data_with_keywords(parsed_dict, keywords)[-1::-1])
