@@ -68,11 +68,10 @@ SEQUENCE_TASK_0 = \
 
 
 def setup_user_environment():
-    """
-    Function that collects current language
-    settings from the user's environment
+    """Function that collects current language
+       settings from the user's environment
 
-    :return:
+    Returns:
         string: value that contains current language settings
     """
     try:
@@ -83,11 +82,12 @@ def setup_user_environment():
 
 
 def get_string_from_user(current_language):
-    """
-    Function which purpose is to collect prompt from user
+    """Function which purpose is to collect prompt from user
 
-    :param current_language: string value that receive language settings
-    :returns:
+    Args:
+        current_language (str): receiver of language settings
+
+    Returns:
         string: value that contains user prompt for the transliteration
     """
     if current_language.startswith('ru'):
@@ -98,22 +98,24 @@ def get_string_from_user(current_language):
 
 
 def transliteration():
-    """
-    Function that transliterate from eng to rus and vice versa.
-    NOTE: There is a global dictionary that contains prepared data.
+    """Function that transliterate from eng to rus and vice versa.
 
-    :returns:
+    NOTE:
+        There is a global dictionary that contains prepared data.
+
+    Returns:
         string: prompt to output
     """
-    output_sring = ''
+
+    output_string = ''
     for each_char in get_string_from_user(setup_user_environment()):
         if each_char.upper() in SEQUENCE_TASK_0.keys():
-            output_sring += SEQUENCE_TASK_0[each_char.upper()].lower() \
+            output_string += SEQUENCE_TASK_0[each_char.upper()].lower() \
                 if each_char.islower()\
                 else SEQUENCE_TASK_0[each_char.upper()].upper()
         else:
-            output_sring += each_char
-    return output_sring
+            output_string += each_char
+    return output_string
 
 
 if __name__ == '__main__':

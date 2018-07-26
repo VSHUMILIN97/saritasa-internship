@@ -16,14 +16,15 @@ from string import Template
 
 
 def build_string(structure, user_prompt):
-    """
-    This function builds a string based on user template.
+    """This function builds a string based on user template.
     If template doesn't fit to the current structure
     error will be raised.
 
-    :param structure: Dictionary that provides Template structure
-    :param user_prompt: String that provides text for Template Builder
-    :returns:
+    Args:
+        structure (dict): provides Template structure
+        user_prompt (str): provides text for Template Builder
+
+    Returns:
         The return value. True for success, False otherwise.
     """
     example = Template(user_prompt.replace('{', '${'))
