@@ -13,8 +13,7 @@ if __name__ == '__main__':
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
             for x in range(100 * 100):
-                writer.writerow({'id': x,
-                                 'name': fake.name(),
+                writer.writerow({'id': x, 'name': fake.name(),
                                  'age': fake.random.randint(14, 50)})
     except IOError:
         logging.error('Cannot reach the file')
