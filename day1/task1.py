@@ -85,12 +85,14 @@ def get_arguments():
         NOTE: The app will stop if the path is incorrect
     """
     parser = argparse.ArgumentParser(description='Process file path')
-    parser.add_argument('path', metavar='P', type=str,
+    parser.add_argument('path',
+                        metavar='P',
+                        type=str,
                         help='a string contains absolute path to file')
     return parser.parse_args()
 
 
 if __name__ == '__main__':
-    parse_result = parse_csv(get_arguments())
-    parsed_dict, keywords = count_entries(parse_result[0], parse_result[1])
+    dictionaries, dict_keys = parse_csv(get_arguments())
+    parsed_dict, keywords = count_entries(dictionaries, dict_keys)
     logging.info(extending_data_with_keywords(parsed_dict, keywords)[-1::-1])
