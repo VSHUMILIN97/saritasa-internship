@@ -24,8 +24,8 @@ def parse_csv(path_to_file):
             keys = next(key_reader)
             for row in key_reader:
                 custom_dict = {}
-                for key in range(0, len(keys)):
-                    custom_dict.setdefault(keys[key], row[key])
+                for key in enumerate(keys):
+                    custom_dict.setdefault(keys[key[0]], row[key[0]])
                 listing.append(custom_dict)
         return listing, keys
     except IOError:

@@ -1,9 +1,10 @@
-import os
 """This script provide a function
    that translates russian text to transliteration and vice versa.
-   Ex: “Эта строка будет подвержена транслитерации” ->
-   “Eta stroka budet podverzhena tranliteracii”
+   Ex:
+        “Эта строка будет подвержена транслитерации” ->
+        “Eta stroka budet podverzhena tranliteracii”
 """
+import os
 SEQUENCE_TASK_0 = \
         {'A': 'А',
             'B': 'Б',
