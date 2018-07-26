@@ -1,6 +1,10 @@
 """This module contains tests for the task0
 
-It demonstrates behaviour of the app and how it should be used
+It demonstrates behaviour of the app and how it should be used.
+Besides it checks for special acts which probably never wouldn't
+be performed.
+Task:
+    Translate russian text to transliteration and vice versa
 """
 import locale
 import unittest
