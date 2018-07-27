@@ -10,11 +10,12 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 def parse_csv(path_to_file):
-    """
-    Function parses csv documents for keys and data
+    """Function parses csv documents for keys and data
 
-    :param path_to_file: string object which is path to the csv document
-    :return:
+    Args:
+        path_to_file (str): path to the csv document
+
+    Returns:
         list: contains dictionaries with parsed data
         keys: contains header of the csv file. First line is for the keywords
     """
@@ -35,13 +36,13 @@ def parse_csv(path_to_file):
 
 
 def count_entries(generated_list, keyword_list):
-    """
-    Function counts and composes dicts for every special keyword
+    """Function counts and composes dicts for every special keyword
 
-    :param generated_list: list object that stores all objects from csv file
-    :param keyword_list: list object that stores all header keywords from
-           csv file
-    :return:
+    Args:
+        generated_list (list): stores all objects from csv file except 1st line
+        keyword_list (list): stores all header keywords from csv file
+
+    Returns:
         dict: contains links between keys and prepared data
         keys: contains header of the csv file. First line is for the keywords
     """
@@ -58,14 +59,15 @@ def count_entries(generated_list, keyword_list):
 
 
 def extending_data_with_keywords(generated_dict, keyword_list):
-    """
-    This function uses collection.Counter class object
-    to create a special dict with parsed counters
+    """This function uses collection.Counter class object
+       to create a special dict with parsed counters
 
-    :param generated_dict: dict object that stores {key: list with values}
-    :param keyword_list: list object that stores all header keywords from
-           csv file
-    :return:
+    Args:
+        generated_dict (dict): store pairs like - {key: list with values}
+        keyword_list (list): list object that stores all header keywords from
+                             csv file
+
+    Returns:
         list: object that contains dicts with our representation of the file
     """
     core_list = []
@@ -78,12 +80,16 @@ def extending_data_with_keywords(generated_dict, keyword_list):
 
 
 def get_arguments(args):
-    """
-    Function that fetch arguments from the command line
+    """Function that fetch arguments from the command line
 
-    :return:
-        string: contains path to csv file (or may be char symbols)
-        NOTE: The app will stop if the path is incorrect
+    Args:
+        args (str): contains path to csv file (or any char symbols given)
+
+    NOTE:
+        The app will stop if the path is incorrect
+
+    Returns:
+        string: existing path to the csv file
     """
     parser = argparse.ArgumentParser(description='Process file path')
     parser.add_argument('path',
