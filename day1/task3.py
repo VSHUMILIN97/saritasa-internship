@@ -30,11 +30,12 @@ def build_string(structure, user_prompt):
     """
     example = Template(user_prompt.replace('{', '${'))
     try:
-        prepared_string = example.substitute(name=structure['name'],
-                                             age=structure['age'],
-                                             workplace=structure['workplace'],
-                                             quote=structure['quote'],
-                                             marriage=structure['marriage'])
+        prepared_string = example.substitute(
+            name=structure.get('name'),
+            age=structure.get('age'),
+            workplace=structure.get('workplace'),
+            quote=structure.get('quote'),
+            marriage=structure.get('marriage'))
         return prepared_string
     except KeyError as e:
         logging.error(f'Incorrect field → {e}')

@@ -31,3 +31,8 @@ class ValidatorTest(unittest.TestCase):
             b_str({'context': 'me'}, '{context}')
 
         self.assertEqual(exit_manager.exception.code, 1)
+
+        with self.assertRaises(SystemExit) as exit_manager:
+            b_str({'complex': 'you'}, '!{{E}!')
+
+        self.assertEqual(exit_manager.exception.code, 1)
