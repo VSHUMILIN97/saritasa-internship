@@ -1,9 +1,14 @@
 #!/usr/bin/python3
 import sys
+import os
 
 from flake8.main import git
 
 if __name__ == '__main__':
+
+    test_executer = 'python3 -m unittest discover '
+    path_to_tests = '/home/user/PycharmProjects/saritasa-internship'
+    os.popen(f'{test_executer}{path_to_tests} "*_tests.py"')
     sys.exit(
         git.hook(
             strict=git.config_for('strict'),

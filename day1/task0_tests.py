@@ -10,7 +10,7 @@ import locale
 import unittest
 import string
 from unittest import mock
-from .task0 import get_user_env_lang as us_lan, transliteration, \
+from day1.task0 import get_user_env_lang as us_lan, transliteration, \
                    get_user_prompt
 
 
