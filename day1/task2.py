@@ -27,7 +27,7 @@ def check_and_merge_my_dict(dict1, dict2):
         dict1.update(dict2)
         return dict1
     except AttributeError:
-        logging.error('Provide script with dicts')
+        logging.error('Incorrect data type. Shutting down')
         return exit(1)
 
 

@@ -7,8 +7,7 @@ Task:
     Merge two dicts by keys and raise warning for any crosses
 """
 import unittest
-from unittest import mock
-from day1.task2 import check_and_merge_my_dict
+from day1.task2 import check_and_merge_my_dict as chk_mrg
 
 
 class DictMergeTest(unittest.TestCase):
@@ -19,11 +18,7 @@ class DictMergeTest(unittest.TestCase):
         Returns:
             The return value. True for success, False otherwise.
         """
-        mock_obj = mock.MagicMock(name='min',
-                                  return_value=check_and_merge_my_dict)
-        func_from_mock = mock_obj()
-
-        self.assertTrue({1, 5}, set((func_from_mock(
+        self.assertTrue({1, 5}, set((chk_mrg(
                                         {1: 2, 3: 4},
                                         {1: 3, 5: 6}).keys())))
 
@@ -34,10 +29,11 @@ class DictMergeTest(unittest.TestCase):
         Returns:
             The return value. True for success, False otherwise.
         """
-        mock_obj = mock.MagicMock(name='min',
-                                  return_value=check_and_merge_my_dict)
-        func_from_mock = mock_obj()
         with self.assertRaises(SystemExit) as exit_manager:
-            func_from_mock(1, 1)
+            chk_mrg(1, 1)
 
         self.assertEqual(exit_manager.exception.code, 1)
+
+    def test_merge_unique_dicts(self):
+        result = chk_mrg({1: 2, 3: 4}, {5: 6})
+        self.assertEqual({1: 2, 3: 4, 5: 6}, result)
