@@ -18,9 +18,6 @@ class TransliterateTest(unittest.TestCase):
 
     def test_environment_exist(self):
         """This test checks whether users locale contain in real locales
-
-        Returns:
-            The return value. True for success, False otherwise.
         """
         exist_locales = locale.locale_alias
         self.assertIn(
@@ -55,10 +52,22 @@ class TransliterateTest(unittest.TestCase):
         self.assertEqual(output_string, string.punctuation)
 
     def test_check_transliteration_not_capitalise_prompt(self):
+        """This test checks whether output is the same capitalisation with
+           prompt or not
+        """
         test_string = 'mimamo'
         output_string = transliteration(test_string)
 
         def is_lower_check(sequence):
+            """Function for checking whole sequence on islower() == True
+
+            Args:
+                sequence (seq): Any iterable object to check
+
+            Returns:
+                False: If any char is upper
+                True: If every char is lower
+            """
             for each_char in sequence:
                 if str(each_char).isupper():
                     return False
@@ -69,5 +78,8 @@ class TransliterateTest(unittest.TestCase):
         )
 
     def test_check_adding_alt_symbols(self):
+        """Function that checks whether it is possible to input
+           any alternative symbols
+        """
         prompt = transliteration('i -!漢')
         self.assertEqual(prompt, 'и -!漢')
