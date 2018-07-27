@@ -10,8 +10,8 @@ import locale
 import unittest
 import string
 from unittest import mock
-from .task0 import setup_user_environment, transliteration, \
-                   get_string_from_user
+from .task0 import get_user_env_lang as us_lan, transliteration, \
+                   get_user_prompt
 
 
 class TransliterateTest(unittest.TestCase):
@@ -23,8 +23,9 @@ class TransliterateTest(unittest.TestCase):
             The return value. True for success, False otherwise.
         """
         exist_locales = locale.locale_alias
-        self.assertIn(setup_user_environment().split('.')[0].lower(),
-                      exist_locales.keys())
+        self.assertIn(
+            us_lan().split('.')[0].lower(), exist_locales.keys()
+        )
 
     @mock.patch('builtins.input', side_effect=[''])
     def test_user_prompt_is_string(self, user_input):
@@ -37,33 +38,36 @@ class TransliterateTest(unittest.TestCase):
         Returns:
             The return value. True for success, False otherwise.
         """
-        user_prompt = get_string_from_user(setup_user_environment())
+        user_prompt = get_user_prompt(us_lan())
         self.assertIsInstance(user_prompt, str)
 
-    @mock.patch('builtins.input', side_effect=['Строка'])
-    def test_check_transliteration_is_successful(self, user_input):
+    def test_check_transliteration_is_successful(self):
         """This test checks whether transliteration works or pass
-
-        Args:
-            user_input (str): User input is showed here.
-                              Mocked by unittest.mock module
-
-        Returns:
-            The return value. True for success, False otherwise.
         """
-        output_string = transliteration()
-        self.assertEqual(output_string, 'Stroka')
+        self.assertEqual(transliteration('Строка'), 'Stroka')
+        self.assertEqual(transliteration('Privet'), 'Привет')
+        self.assertEqual(transliteration('Privet строка'), 'Привет stroka')
 
-    @mock.patch('builtins.input', side_effect=[string.punctuation])
-    def test_check_transliteration_special_symbols(self, user_input):
+    def test_check_transliteration_special_symbols(self):
         """This test checks whether special symbols can pass through or not
-
-        Args:
-            user_input (str): User input is showed here.
-                              Mocked by unittest.mock module
-
-        Returns:
-            The return value. True for success, False otherwise.
         """
-        output_string = transliteration()
+        output_string = transliteration(string.punctuation)
         self.assertEqual(output_string, string.punctuation)
+
+    def test_check_transliteration_not_capitalise_prompt(self):
+        test_string = 'mimamo'
+        output_string = transliteration(test_string)
+
+        def is_lower_check(sequence):
+            for each_char in sequence:
+                if str(each_char).isupper():
+                    return False
+                return True
+
+        self.assertEqual(
+            is_lower_check(test_string), is_lower_check(output_string)
+        )
+
+    def test_check_adding_alt_symbols(self):
+        prompt = transliteration('i -!漢')
+        self.assertEqual(prompt, 'и -!漢')

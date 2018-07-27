@@ -67,21 +67,18 @@ SEQUENCE_TASK_0 = \
             'Ы': 'II'}
 
 
-def setup_user_environment():
+def get_user_env_lang():
     """Function that collects current language
        settings from the user's environment
 
     Returns:
         string: value that contains current language settings
     """
-    try:
-        user_language = os.getenv('LANG')
-    except OSError:
-        user_language = 'ru'
+    user_language = os.getenv('LANG')
     return user_language
 
 
-def get_string_from_user(current_language):
+def get_user_prompt(current_language):
     """Function which purpose is to collect prompt from user
 
     Args:
@@ -97,18 +94,21 @@ def get_string_from_user(current_language):
     return user_prompt
 
 
-def transliteration():
+def transliteration(user_string):
     """Function that transliterate from eng to rus and vice versa.
 
     NOTE:
         There is a global dictionary that contains prepared data.
+
+    Args:
+        user_string (str): input from the user
 
     Returns:
         string: prompt to output
     """
 
     output_string = ''
-    for each_char in get_string_from_user(setup_user_environment()):
+    for each_char in user_string:
         if each_char.upper() in SEQUENCE_TASK_0.keys():
             output_string += SEQUENCE_TASK_0[each_char.upper()].lower() \
                 if each_char.islower()\
@@ -119,4 +119,5 @@ def transliteration():
 
 
 if __name__ == '__main__':
-    print(transliteration())
+    print(transliteration(get_user_prompt(get_user_env_lang())))
+    print(transliteration(get_user_prompt('ru')))
