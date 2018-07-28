@@ -24,7 +24,7 @@ class CountMatchesTest(unittest.TestCase):
                                   return_value=get_arguments)
         func_from_mock = mock_obj()
         with self.assertRaises(SystemExit) as cm:
-            func_from_mock(['/some/related/path']).path
+            func_from_mock(['/some/related/path'])
         self.assertEqual(cm.exception.code, 0)
 
     def test_extending_data_with_keywords(self):
