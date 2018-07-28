@@ -14,7 +14,7 @@ from day1.task1 import get_arguments, extending_data_with_keywords as ext_dt, \
 
 class CountMatchesTest(unittest.TestCase):
 
-    def test_getting_arguments(self):
+    def test_crash_on_wrong_input(self):
         """This test checks whether it is possible to get the args
 
         Returns:
@@ -23,7 +23,9 @@ class CountMatchesTest(unittest.TestCase):
         mock_obj = mock.MagicMock(name='min',
                                   return_value=get_arguments)
         func_from_mock = mock_obj()
-        self.assertIsInstance(func_from_mock(['/some/related/path']).path, str)
+        with self.assertRaises(SystemExit) as cm:
+            func_from_mock(['/some/related/path']).path
+        self.assertEqual(cm.exception.code, 0)
 
     def test_extending_data_with_keywords(self):
         """This test checks whether it is possible to extend the list

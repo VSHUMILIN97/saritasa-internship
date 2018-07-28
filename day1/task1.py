@@ -21,7 +21,7 @@ def parse_csv(path_to_file):
     """
     listing = []
     try:
-        with open(path_to_file.path, 'r') as csvfile:
+        with open(path_to_file, 'r') as csvfile:
             key_reader = csv.reader(csvfile, delimiter=',', quotechar='|')
             keys = next(key_reader)
             for row in key_reader:
@@ -92,14 +92,14 @@ def get_arguments(args):
         string: existing path to the csv file
     """
     parser = argparse.ArgumentParser(description='Process file path')
-    parser.add_argument('path',
+    parser.add_argument('parsed_data',
                         metavar='P',
-                        type=str,
+                        type=parse_csv,
                         help='a string contains absolute path to file')
     return parser.parse_args(args)
 
 
 if __name__ == '__main__':
-    dictionaries, dict_keys = parse_csv(get_arguments(sys.argv[1:]))
+    dictionaries, dict_keys = get_arguments(sys.argv[1:]).parsed_data
     parsed_dict, keywords = count_entries(dictionaries, dict_keys)
     logging.info(extending_data_with_keywords(parsed_dict, keywords)[-1::-1])
