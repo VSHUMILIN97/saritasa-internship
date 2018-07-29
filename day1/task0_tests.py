@@ -27,13 +27,6 @@ class TransliterateTest(unittest.TestCase):
     @mock.patch('builtins.input', side_effect=[''])
     def test_user_prompt_is_string(self, user_input):
         """This test checks whether prompt by user is instance of str or not
-
-        Args:
-            user_input (str): User input is showed here.
-                              Mocked by unittest.mock module
-
-        Returns:
-            The return value. True for success, False otherwise.
         """
         user_prompt = get_user_prompt(us_lan())
         self.assertIsInstance(user_prompt, str)

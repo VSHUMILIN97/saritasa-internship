@@ -15,10 +15,8 @@ from day1.task1 import get_arguments, extending_data_with_keywords as ext_dt, \
 class CountMatchesTest(unittest.TestCase):
 
     def test_crash_on_wrong_input(self):
-        """This test checks whether it is possible to get the args
-
-        Returns:
-            The return value. True for success, False otherwise.
+        """This test checks whether app is reacting on the incorrect
+           path input
         """
         mock_obj = mock.MagicMock(name='min',
                                   return_value=get_arguments)
@@ -30,9 +28,6 @@ class CountMatchesTest(unittest.TestCase):
     def test_extending_data_with_keywords(self):
         """This test checks whether it is possible to extend the list
            with given criteria
-
-        Returns:
-            The return value. True for success, False otherwise.
         """
         attribute_dict = {1: [1 in range(50)],
                           2: [1 in range(100)]}
@@ -43,9 +38,6 @@ class CountMatchesTest(unittest.TestCase):
     def test_storage_data_in_dictionaries(self):
         """This test checks whether it is possible to storage data
            in the dictionary
-
-        Returns:
-            The return value. True for success, False otherwise.
         """
         prepared_data = [{1: 3, 2: 4}, {1: 5, 2: 6}]
         keys = [1, 2]
