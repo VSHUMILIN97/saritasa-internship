@@ -6,7 +6,8 @@ import logging
 import argparse
 import collections
 import sys
-logging.basicConfig(level=logging.DEBUG)
+import pprint
+logging.basicConfig(level=logging.ERROR)
 
 
 def parse_csv(path_to_file):
@@ -104,4 +105,4 @@ def get_arguments(args):
 if __name__ == '__main__':
     dictionaries, dict_keys = get_arguments(sys.argv[1:]).parsed_data
     parsed_dict, keywords = count_entries(dictionaries, dict_keys)
-    logging.info(extending_data_with_keywords(parsed_dict, keywords)[-1::-1])
+    pprint.pprint(extending_data_with_keywords(parsed_dict, keywords)[-1::-1])
