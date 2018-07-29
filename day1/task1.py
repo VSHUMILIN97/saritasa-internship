@@ -80,7 +80,8 @@ def extending_data_with_keywords(generated_dict, keyword_list):
 
 
 def get_arguments(args):
-    """Function that fetch arguments from the command line
+    """Function that fetch path from the command line and compute parse_csv
+       with user arg which is string parameter
 
     Args:
         args (str): contains path to csv file (or any char symbols given)
@@ -89,7 +90,8 @@ def get_arguments(args):
         The app will stop if the path is incorrect
 
     Returns:
-        string: existing path to the csv file
+        parser: parser object which contains result of computing parse_csv
+                function
     """
     parser = argparse.ArgumentParser(description='Process file path')
     parser.add_argument('parsed_data',
