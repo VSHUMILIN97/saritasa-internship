@@ -37,9 +37,6 @@ def parse_csv(path_to_file):
     except IOError:
         logging.error('Cannot open the file. Check permissions')
         raise SystemExit(1)
-    except OSError:
-        logging.error('Unknown error. Check your OS settings.')
-        raise SystemExit(1)
 
 
 def count_entries(generated_list, keyword_list):
