@@ -21,6 +21,7 @@ class YRange:
             return self.start
         else:
             self.start = 0
+            return self.start
 
 
 if __name__ == '__main__':
