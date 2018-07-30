@@ -23,8 +23,9 @@ class YRange:
             self.start = 0
 
 
-yrange_object = YRange(5)
-for each_iteration in yrange_object:
-    pprint.pprint(each_iteration)
-    time.sleep(0.5)
+if __name__ == '__main__':
+    yrange_object = YRange(5)
+    for each_iteration in yrange_object:
+        pprint.pprint(each_iteration)
+        time.sleep(0.5)
 
