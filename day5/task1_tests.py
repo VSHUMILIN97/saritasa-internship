@@ -2,7 +2,7 @@ import unittest
 from day5.task1 import reverse_iter, RSequence
 
 
-class IterationTest(unittest.TestCase):
+class ReverseTest(unittest.TestCase):
 
     def test_data_is_reversed_by_class(self):
         """Test that checks whether data is reversed
