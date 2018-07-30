@@ -12,7 +12,7 @@ def reverse_iter(seq):
         sequence: Reversed sequence for the further work
     """
     try:
-        seq = reversed(seq)
+        seq = reversed(list(seq))
         return seq
     except TypeError:
         raise SystemExit('Unknown data type')
