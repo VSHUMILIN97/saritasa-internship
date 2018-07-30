@@ -31,9 +31,15 @@ def parse_csv(path_to_file):
                     custom_dict.setdefault(keys[key], row[key])
                 listing.append(custom_dict)
         return listing, keys
+    except FileNotFoundError:
+        logging.error(f'Cannot find the file on path {path_to_file}')
+        raise SystemExit(1)
     except IOError:
-        logging.error('Cannot reach the file')
-        exit(0)
+        logging.error('Cannot open the file. Check permissions')
+        raise SystemExit(1)
+    except OSError:
+        logging.error('Unknown error. Check your OS settings.')
+        raise SystemExit(1)
 
 
 def count_entries(generated_list, keyword_list):

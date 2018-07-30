@@ -18,12 +18,14 @@ class CountMatchesTest(unittest.TestCase):
         """This test checks whether app is reacting on the incorrect
            path input
         """
-        mock_obj = mock.MagicMock(name='min',
-                                  return_value=get_arguments)
-        func_from_mock = mock_obj()
+        mock_obj = mock.MagicMock(
+            name='min',
+            return_value=get_arguments
+        )
+        mocking_func = mock_obj()
         with self.assertRaises(SystemExit) as cm:
-            func_from_mock(['/some/related/path'])
-        self.assertEqual(cm.exception.code, 0)
+            mocking_func(['/some/related/path'])
+        self.assertEqual(cm.exception.code, 1)
 
     def test_extending_data_with_keywords(self):
         """This test checks whether it is possible to extend the list
