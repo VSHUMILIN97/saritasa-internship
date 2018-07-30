@@ -21,9 +21,9 @@ def check_and_merge_my_dict(dict1, dict2):
         dict: dictionary that contains all the merged data
     """
     try:
-        for key in dict1.keys():
-            if key in dict2.keys():
-                logging.info(f"Current key - '{key}' is doubled")
+        dbl_keys = set(dict1.keys()).intersection(dict2.keys())
+        for key in dbl_keys:
+            logging.info(f"Current key - '{key}' is doubled")
         dict1.update(dict2)
         return dict1
     except AttributeError:
