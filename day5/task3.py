@@ -27,14 +27,12 @@ class ConcatSequence:
         *args (list): List of sequences
     """
     def __init__(self, *args):
-        self.global_list = []
         self.sequence_args = args
 
     def __iter__(self):
         try:
             for each_sequence in self.sequence_args:
                 for each_val in each_sequence:
-                    self.global_list.append(each_val)
                     yield each_val
         except TypeError:
             raise SystemExit('Wrong input type')
@@ -47,12 +45,14 @@ if __name__ == '__main__':
     fourth = 'Kappa'
     fifth = {10, 20, 30, 40}
     cs_with_args = concatenate_sequence(first, second, third, fourth, fifth)
-    for any_val in cs_with_args:
+    iterable_func = iter(cs_with_args)
+    for any_val in iterable_func:
         print(any_val)
     print(cs_with_args)
     print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
     second = (i**2 for i in range(6))
     cs = ConcatSequence(first, second, third, fourth, fifth)
-    for any_val in cs:
+    iterable_cls = iter(cs)
+    for any_val in iterable_cls:
         print(any_val)
     print(cs)
