@@ -21,9 +21,3 @@ class SingletonTest(unittest.TestCase):
         second_inst = one_generator()
         self.assertEqual(2, next(second_inst))
         self.assertEqual(first_inst, second_inst)
-
-
-
-
-
-

@@ -35,6 +35,3 @@ class ReverseTest(unittest.TestCase):
 
     def test_function_return_reversed_iterator(self):
         self.assertIsInstance(reverse_iter([1]), iter)
-
-
-

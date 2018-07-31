@@ -29,4 +29,3 @@ if __name__ == '__main__':
     for each_iteration in yrange_object:
         pprint.pprint(each_iteration)
         time.sleep(0.5)
-

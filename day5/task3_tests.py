@@ -25,10 +25,3 @@ class SingletonTest(unittest.TestCase):
         with self.assertRaises(SystemExit) as cm:
             concatenate_sequence(1)
         self.assertEqual('Wrong input type', cm.exception.code)
-
-
-
-
-
-
-
