@@ -1,4 +1,5 @@
 from pprint import pprint
+import copy
 
 """
 TO-DO:
@@ -115,12 +116,14 @@ class ReadOnlyDict(object):
 
 if __name__ == '__main__':
     dd = {'name': 'Tor', 'info': {'age': 10, 'secret': 12}}
+    d2d = copy.deepcopy(dd)
     a = ReadOnlyDict(dd)
     pprint(f'Getting a.info.age - {a.info.age}')
     pprint(f'Getting a.name - {a.name}')
-    b = setup_dict_factory(dd, add=True, change=True, delete=True)
+    b = setup_dict_factory(d2d, add=True, change=True, delete=True)
     print(f'"b" object dict before inserting - {b.user_dict}')
     b.info.future = 'KOI-8'
     b.info.age = 'kek'
     del b.name
+    print(f'Full "a" object dict after reading - {a.user_dict}')
     print(f'Full "b" object dict after inserting - {b.user_dict}')
