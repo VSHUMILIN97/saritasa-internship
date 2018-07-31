@@ -29,9 +29,7 @@ class ReverseTest(unittest.TestCase):
         self.assertEqual([3, 2, 1], storage)
         storage.clear()
         textbbox = 'Mark'
-        for item in textbbox:
+        for item in reverse_iter(textbbox):
             storage.append(item)
-        self.assertEqual('kraM', ''.join(textbbox))
+        self.assertEqual('kraM', ''.join(storage))
 
-    def test_function_return_reversed_iterator(self):
-        self.assertIsInstance(reverse_iter([1]), iter)
