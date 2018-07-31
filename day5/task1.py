@@ -12,8 +12,13 @@ def reverse_iter(seq):
         sequence: Reversed sequence for the further work
     """
     try:
-        seq = reversed(list(seq))
-        return seq
+        # Can be like reversed(list(seq)) - I know, but not cool
+        seq = list(seq)
+        print(f'Default - {seq}')
+        output_sec = []
+        for _ in range(0, len(seq)):
+            output_sec.append(seq.pop())
+        return output_sec
     except TypeError:
         raise SystemExit('Unknown data type')
 
@@ -40,17 +45,22 @@ class RSequence:
         return self
 
 
+def rseq_factory(sec):
+    reversed_seq = RSequence(sec)
+    for each_value in reversed_seq:
+        pprint.pprint(each_value)
+
+
 if __name__ == '__main__':
     sequence = [1, 2, 3, 4, 5, 6, 7, 8]
     string_sequence = 'Privet'
-    for each_value in reverse_iter(sequence):
-        pprint.pprint(each_value)
+    pprint.pprint(f'Reverse - {reverse_iter(sequence)}')
+    pprint.pprint(f'Reverse - {reverse_iter(string_sequence)}')
 
     line = '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
     for _ in range(5):
         print(f'{line}ENDPOINT FUNC CALL{line}')
         time.sleep(0.5)
 
-    reversed_seq = RSequence(string_sequence)
-    for each_value in reversed_seq:
-        pprint.pprint(each_value)
+    rseq_factory(sequence)
+    rseq_factory(string_sequence)

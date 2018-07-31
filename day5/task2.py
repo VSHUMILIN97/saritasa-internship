@@ -16,11 +16,11 @@ def singleton(class_):
     """
     instances = {}
 
-    def getinstance(*args, **kwargs):
+    def get_instance(*args, **kwargs):
         if class_ not in instances:
             instances[class_] = class_(*args, **kwargs)
         return instances[class_]
-    return getinstance
+    return get_instance
 
 
 @singleton
@@ -52,7 +52,7 @@ if __name__ == '__main__':
     for _ in range(3):
         print(next(first))
     second = OneGenerator()
-    print(LINE)
+    print(f'{LINE}NEXT CALL{LINE}')
     print(next(second))
 
     for _ in range(3):
@@ -63,4 +63,5 @@ if __name__ == '__main__':
     for _ in range(3):
         print(next(third))
     fourth = one_generator()
+    print(f'{LINE}NEXT CALL{LINE}')
     print(next(fourth))
