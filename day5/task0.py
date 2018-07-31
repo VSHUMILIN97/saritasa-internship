@@ -3,7 +3,6 @@ import copy
 
 """
 TO-DO:
-    * Fix that Attribute error (__getattr__)
     * Implement possibility to restrict_items
     * Write tests
 """
@@ -67,12 +66,14 @@ class ReadOnlyDict(object):
 
     def __setattr__(self, key, value):
         if self.add:
-            self.user_dict[key] = value
+            self.user_dict.setdefault(key, value)
         elif self.change:
-            if not self.add:
-                raise ValueError('Not permitted to add stuff')
+            if self.user_dict.get(key) is None:
+                raise ValueError('Not permitted to add')
             else:
-                self.user_dict[key].update({key: value})
+                self.user_dict[key] = value
+        else:
+            raise ValueError('Not permitted to add/change at all')
 
     def get_sibling(self, item):
         """ Function that returns 'leaf' value
@@ -81,7 +82,7 @@ class ReadOnlyDict(object):
             item (immutable): Key of the dictionary
 
         Returns:
-            ReadOnlyDict: If there are nested dicts inside
+            ReadOnlyDict (cls): If there are nested dicts inside
             object: Value that stores in the 'leaf' of the dict
         """
         if isinstance(self.user_dict[item], dict):
@@ -92,9 +93,7 @@ class ReadOnlyDict(object):
             return self.user_dict[item]
 
     def __getattr__(self, item):
-        if self.user_dict.get(item) is None:
-            raise ValueError('Unknown attribute')
-        elif not isinstance(self.user_dict.get(item), dict):
+        if not isinstance(self.user_dict.get(item), dict):
             return {item: self.user_dict.get(item)}
         else:
             return self.get_sibling(item)
@@ -104,16 +103,6 @@ class ReadOnlyDict(object):
             self.user_dict.pop(item)
         else:
             raise AttributeError('Not permitted to delete')
-
-    def dig_nested_dict(self, data):
-        """ Construct nested ReadOnlyDicts
-            from nested dictionaries. """
-        if not isinstance(data, dict):
-            return data
-        else:
-            return ReadOnlyDict({
-                key: ReadOnlyDict.dig_nested_dict(self, data[key])
-                for key in data})
 
 
 if __name__ == '__main__':
@@ -126,7 +115,10 @@ if __name__ == '__main__':
     print(f'"b" object dict before inserting - {b.user_dict}')
     b.info.future = 'KOI-8'
     b.info.age = 'kek'
-    print(b.info.age)
     del b.name
+    print(f'Full "b" object dict after deleting - {b.user_dict}')
+    b.name = {}
+    b.name.kon = 13
+    print(b.name.kon)
     print(f'Full "a" object dict after reading - {a.user_dict}')
     print(f'Full "b" object dict after inserting - {b.user_dict}')
