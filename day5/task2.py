@@ -6,7 +6,7 @@ ENDPOINT = 'ENDPOINT CLASS CALL'
 
 
 def singleton(class_):
-    """
+    """Return instance of Singleton
 
     Args:
         class_ (cls): Checks for the class name
