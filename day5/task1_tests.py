@@ -32,4 +32,3 @@ class ReverseTest(unittest.TestCase):
         for item in reverse_iter(textbbox):
             storage.append(item)
         self.assertEqual('kraM', ''.join(storage))
-

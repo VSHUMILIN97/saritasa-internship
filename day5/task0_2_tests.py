@@ -12,7 +12,7 @@ class IterationTest(unittest.TestCase):
         bbox = SimpleGenerator(-1)
         self.assertEqual(0, bbox.start)
         funcbbox = simple_gen(-1)
-        with self.assertRaises(StopIteration) as _:
+        with self.assertRaises(StopIteration):
             next(funcbbox)
 
     def test_endpoint_is_always_bigger(self):
