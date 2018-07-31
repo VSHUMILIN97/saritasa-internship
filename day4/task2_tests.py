@@ -1,5 +1,5 @@
 import unittest
-from day5.task2 import OneGenerator, one_generator
+from day4.task2 import OneGenerator, one_generator
 
 
 class SingletonTest(unittest.TestCase):

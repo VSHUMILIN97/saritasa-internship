@@ -1,5 +1,5 @@
 import unittest
-from day5.task3 import concatenate_sequence, ConcatSequence
+from day4.task3 import concatenate_sequence, ConcatSequence
 
 
 class SingletonTest(unittest.TestCase):
