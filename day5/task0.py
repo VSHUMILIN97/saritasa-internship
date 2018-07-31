@@ -72,7 +72,7 @@ class ReadOnlyDict(object):
             if not self.add:
                 raise ValueError('Not permitted to add stuff')
             else:
-                self.user_dict[key] = value
+                self.user_dict[key].update({key: value})
 
     def get_sibling(self, item):
         """ Function that returns 'leaf' value
@@ -94,6 +94,8 @@ class ReadOnlyDict(object):
     def __getattr__(self, item):
         if self.user_dict.get(item) is None:
             raise ValueError('Unknown attribute')
+        elif not isinstance(self.user_dict.get(item), dict):
+            return {item: self.user_dict.get(item)}
         else:
             return self.get_sibling(item)
 
@@ -124,6 +126,7 @@ if __name__ == '__main__':
     print(f'"b" object dict before inserting - {b.user_dict}')
     b.info.future = 'KOI-8'
     b.info.age = 'kek'
+    print(b.info.age)
     del b.name
     print(f'Full "a" object dict after reading - {a.user_dict}')
     print(f'Full "b" object dict after inserting - {b.user_dict}')
