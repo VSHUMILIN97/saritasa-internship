@@ -8,15 +8,12 @@ def concatenate_sequence(*args):
     Returns:
         list: List with the concatenation result
     """
-    glob_list = []
     try:
         for each_sequence in args:
                 for each_val in each_sequence:
                     yield each_val
-                    glob_list.append(each_val)
     except TypeError:
         raise SystemExit('Wrong input type')
-    return glob_list
 
 
 class ConcatSequence:
