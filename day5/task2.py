@@ -3,20 +3,28 @@ import time
 
 LINE = '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
 ENDPOINT = 'ENDPOINT CLASS CALL'
+instances = {}
 
 
 def singleton(class_):
-    """Return instance of Singleton
+    """Decorator that returns instance in Singleton pattern
 
     Args:
         class_ (cls): Checks for the class name
 
     Returns:
-
+        Result of inner function
     """
-    instances = {}
-
     def get_instance(*args, **kwargs):
+        """Save the instance in the global dictionary
+
+        Args:
+            *args: everything from input function
+            **kwargs: everything from input function
+
+        Returns:
+            Instance of the input class/function
+        """
         if class_ not in instances:
             instances[class_] = class_(*args, **kwargs)
         return instances[class_]
@@ -25,14 +33,13 @@ def singleton(class_):
 
 @singleton
 class OneGenerator:
-
+    """This class return single instance of Basic Generator
+    """
     def __init__(self):
         self.dummy_value = 0
 
     def __iter__(self):
-        while True:
-            yield self.dummy_value
-            self.dummy_value += 1
+        return self
 
     def __next__(self):
         self.dummy_value += 1
@@ -41,10 +48,15 @@ class OneGenerator:
 
 @singleton
 def one_generator():
-    _ = 1
+    """Implementation of Simple generator w/ counter
+
+    Yields:
+        int: Counter of current iteration
+    """
+    counter = 1
     while True:
-        yield _
-        _ += 1
+        yield counter
+        counter += 1
 
 
 if __name__ == '__main__':

@@ -42,14 +42,12 @@ if __name__ == '__main__':
     fourth = 'Kappa'
     fifth = {10, 20, 30, 40}
     cs_with_args = concatenate_sequence(first, second, third, fourth, fifth)
-    iterable_func = iter(cs_with_args)
-    for any_val in iterable_func:
+    for any_val in cs_with_args:
         print(any_val)
     print(cs_with_args)
     print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
     second = (i**2 for i in range(6))
     cs = ConcatSequence(first, second, third, fourth, fifth)
-    iterable_cls = iter(cs)
-    for any_val in iterable_cls:
+    for any_val in cs:
         print(any_val)
     print(cs)

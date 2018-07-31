@@ -13,11 +13,11 @@ def reverse_iter(seq):
     """
     try:
         # Can be like reversed(list(seq)) - I know, but not cool
-        seq = list(seq)
+        seq = tuple(seq)
         print(f'Default - {seq}')
         output_sec = []
-        for _ in range(0, len(seq)):
-            output_sec.append(seq.pop())
+        for minus in range(0, len(seq)):
+            output_sec.append(seq[-minus - 1])
         return output_sec
     except TypeError:
         raise SystemExit('Unknown data type')
