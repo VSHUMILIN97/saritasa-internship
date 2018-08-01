@@ -66,6 +66,7 @@ class SetLike(object):
         else:
             self.unique.append(elem)
             self.do_shuffle()
+        return self.unique
 
     def clear(self, *args, **kwargs):
         """ Remove all elements from this set. """
@@ -328,9 +329,14 @@ class SetLike(object):
         """ Return repr(self). """
         return self.unique
 
-    def __ror__(self, *args, **kwargs):
+    def __ror__(self, elem, *args, **kwargs):
         """ Return value|self. """
-        pass
+        intersection = [x for x in self.unique if x in elem]
+        for item in elem:
+            if item not in intersection:
+                self.unique.append(item)
+        self.do_shuffle()
+        return self.unique
 
     def __rsub__(self, *args, **kwargs):
         """ Return value-self. """
@@ -370,32 +376,3 @@ class SetLike(object):
         return str(self.unique)
 
     __hash__ = None
-
-
-a = SetLike([1, 2, 3, 3, 15, 22, 22])
-a += {11}
-b = SetLike([2, 4, 6, 10])
-a.add(12)
-b.add(12)
-b.add(3)
-
-print(a.intersection(b), a.__and__(b))
-print(a | b, a.union(b))
-print(a - b, a.difference(b))
-a.add(10)
-b.add(1)
-print(a, b)
-print(a ^ b, a.symmetric_difference(b))
-print(a >= b)
-print(a > b)
-print(a != b)
-print(a < b)
-print(a == b)
-a &= b
-print(a)
-a += b
-print(a)
-a |= b
-print(a)
-a ^= b
-print(a)

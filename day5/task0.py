@@ -122,21 +122,4 @@ class ReadOnlyDict(object):
 
 
 if __name__ == '__main__':
-    dd = {'name': 'Tor', 'info': {'age': 10, 'secret': 12}}
-    d2d = copy.deepcopy(dd)
-    a = ReadOnlyDict(dd)
-    pprint(f'Getting a.info.age - {a.info.age}')
-    pprint(f'Getting a.name - {a.name}')
-    b = setup_dict_factory(d2d, add=True, change=True, delete=True)
-    b.info.future = 'KOI-8'
-    b.info.age = 'kek'
-    print(b.info.age)
-    print(b.info.future)
-    del b.name
-    b.name = 'Kippo'
-    b.name.Keepo = 'Kyoto'
-    b.info.future = 'BONES'
-    print(b.info)
-    b.name.kon = 13
-    print(b.name.kon)
-    b.name.kon.eax = 11
+    pass
