@@ -41,13 +41,5 @@ def retry(exceptions, retries=None, delay=3):
 
 
 if __name__ == '__main__':
-    @retry((KeyError, ValueError), delay=1, retries=12)
-    def sample():
-        if random.random() < 0.5:
-            raise ValueError('What did you expect?')
-        elif 0.5 < random.random() < 0.90:
-            raise KeyError('A real test?')
-        else:
-            print('Success')
-    sample()
+    pass
 
