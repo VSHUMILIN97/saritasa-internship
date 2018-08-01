@@ -1,6 +1,3 @@
-from pprint import pprint
-import copy
-
 """
 TO-DO:
     * Implement possibility to restrict_items
