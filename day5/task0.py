@@ -5,6 +5,9 @@ import copy
 TO-DO:
     * Implement possibility to restrict_items
     * Write tests
+Notes:
+    * Feel free to revert any time to adequate (but inappropriate) version
+    * Commit number - 9e4ae08e2c2838f73dc95a132933419f16adfe3f
 """
 
 
