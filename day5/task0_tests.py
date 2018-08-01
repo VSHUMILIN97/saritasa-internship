@@ -14,10 +14,10 @@ class ReadOnlyDictTest(unittest.TestCase):
             bbox.granddad = 'dedushka'
         with self.assertRaises(ValueError) as cm2:
             funcbbox.grandmom = 'babushka'
-        self.assertEqual(cm.exception,
-                         ValueError('Not permitted to add/change at all'))
-        self.assertEqual(cm2.exception,
-                         ValueError('Not permitted to add/change at all'))
+        self.assertEqual(str(cm.exception),
+                         'Not permitted to add/change at all')
+        self.assertEqual(str(cm2.exception),
+                         'Not permitted to add/change at all')
 
     def test_extend_dictionary_on_attribute_with_permission(self):
         """ Test checks whether it is possible to extend dictionary
@@ -27,15 +27,16 @@ class ReadOnlyDictTest(unittest.TestCase):
         bbox = ReadOnlyDict({'mama': 'mom', 'otec': 'dad'}, add=True)
         funcbbox.a = 2
         bbox.b = 3
-        self.assertEqual({'a': 2}, funcbbox.a)
-        self.assertEqual({'b': 3}, bbox.b)
-        self.assertEqual({'mama': 'mom', 'a': 2},
-                         funcbbox.user_dict)
+        self.assertIsInstance(funcbbox.a, ReadOnlyDict)
+        self.assertIsInstance(bbox.b, ReadOnlyDict)
+        self.assertEqual(funcbbox.user_dict, {'mama': 'mom',
+                                              'a': {}})
 
     def test_delete_permissions_check(self):
         """ Test checks whether it is possible to del object
         """
-        funcbbox = setup_dict_factory({'mama': {'lambdaY': {1: 2}}}, delete=True)
+        funcbbox = setup_dict_factory({'mama': {'lambdaY': {1: 2}}},
+                                      delete=True)
         bbox = ReadOnlyDict({'mama': 'mom', 'otec': 'dad'}, delete=True)
         del funcbbox.mama.lambdaY
         self.assertEqual({'mama': {}}, funcbbox.user_dict)
@@ -47,9 +48,10 @@ class ReadOnlyDictTest(unittest.TestCase):
             something with only change permission or it is not
             possible
         """
-        funcbbox = setup_dict_factory({'mama': 'mom', 'otec': 'dad'}, change=True)
+        funcbbox = setup_dict_factory({'mama': 'mom', 'otec': 'dad'},
+                                      change=True)
         funcbbox.mama = 'mommy'
-        self.assertEqual({'mama': 'mommy'}, funcbbox.mama)
+        self.assertEqual('mommy', funcbbox.mama)
         with self.assertRaises(ValueError) as cm:
             funcbbox.uncle = 'Benz'
-        self.assertEqual(cm.exception, ValueError('Not permitted to add'))
+        self.assertEqual(str(cm.exception), 'Not permitted to add')
