@@ -1,5 +1,6 @@
 import copy
 from random import shuffle
+import sys
 
 
 class SetLike(object):
@@ -10,7 +11,7 @@ class SetLike(object):
         for x in seq:
             if x not in self.unique:
                 self.unique.append(x)
-        shuffle(self.unique)
+        self.do_shuffle()
 
     def __iter__(self):
         return self
@@ -127,12 +128,7 @@ class SetLike(object):
 
     def issubset(self, elem, *args, **kwargs):
         """ Report whether another set contains this set. """
-        for x in self.unique:
-            if x in elem:
-                continue
-            else:
-                return False
-        return True
+        self.__ge__(elem)
 
     def issuperset(self, elem, *args, **kwargs):
         """ Report whether this set contains another set. """
@@ -201,52 +197,112 @@ class SetLike(object):
         else:
             return False
 
-    def __eq__(self, *args, **kwargs):
+    def __eq__(self, elem, *args, **kwargs):
         """ Return self==value. """
-        pass
+        if self.is_instance_fake(elem):
+            if elem == self.unique:
+                return True
+            else:
+                return False
 
-    def __ge__(self, *args, **kwargs):
+    def __ge__(self, elem, *args, **kwargs):
         """ Return self>=value. """
-        pass
+        if self.is_instance_fake(elem):
+            for item in elem:
+                if item in self.unique:
+                    pass
+                else:
+                    return False
+            return True
 
     def __getattr__(self, item):
         return item
 
-    def __gt__(self, *args, **kwargs):
+    def __gt__(self, elem, *args, **kwargs):
         """ Return self>value. """
-        pass
+        if self.is_instance_fake(elem):
+            for item in elem:
+                if item in self.unique:
+                    pass
+                else:
+                    return False
+            if len(elem) == len(self.unique):
+                return False
+            return True
 
-    def __iand__(self, *args, **kwargs):
+    def __iand__(self, elem, *args, **kwargs):
         """ Return self&=value. """
-        pass
+        if self.is_instance_fake(elem):
+            intersection = [x for x in self.unique if x in elem]
+            self.unique = copy.deepcopy(intersection)
+            self.do_shuffle()
+            return self.unique
 
-    def __ior__(self, *args, **kwargs):
+    def __ior__(self, elem, *args, **kwargs):
         """ Return self|=value. """
-        pass
+        if self.is_instance_fake(elem):
+            union = [x for x in self.unique]
+            union.extend([y for y in elem if y not in self.unique])
+            self.unique = copy.deepcopy(union)
+            self.do_shuffle()
+            return self.unique
+        else:
+            raise TypeError('Unknown operation for type(s)'
+                            f' - SetLike and {type(elem)}')
 
-    def __isub__(self, *args, **kwargs):
+    def __isub__(self, elem, *args, **kwargs):
         """ Return self-=value. """
-        pass
+        if self.is_instance_fake(elem):
+            for every_val in elem:
+                if every_val in self.unique:
+                    self.unique.pop(self.unique.index(every_val))
+            self.do_shuffle()
+            return self.unique
 
-    def __ixor__(self, *args, **kwargs):
+    def __ixor__(self, elem, *args, **kwargs):
         """ Return self^=value. """
-        pass
+        priv = self.__and__(elem)
+        for item in elem:
+            if item not in priv:
+                self.unique.append(item)
+        self.do_shuffle()
+        return self.unique
 
     def __len__(self, *args, **kwargs):
         """ Return len(self). """
         return len(self.unique)
 
-    def __le__(self, *args, **kwargs):
+    def __le__(self, elem, *args, **kwargs):
         """ Return self<=value. """
-        pass
+        if self.is_instance_fake(elem):
+            for item in self.unique:
+                if item in elem:
+                    pass
+                else:
+                    return False
+            return True
 
-    def __lt__(self, *args, **kwargs):
+    def __lt__(self, elem, *args, **kwargs):
         """ Return self<value. """
-        pass
+        if self.is_instance_fake(elem):
+            for item in self.unique:
+                if item in elem:
+                    pass
+                else:
+                    return False
+            if len(elem) == len(self.unique):
+                return False
+            return True
 
-    def __ne__(self, *args, **kwargs):
+    def __ne__(self, elem, *args, **kwargs):
         """ Return self!=value. """
-        pass
+        if self.is_instance_fake(elem):
+            for item in self.unique:
+                if item in elem:
+                    pass
+                else:
+                    return True
+            return False
 
     def __or__(self, elem, *args, **kwargs):
         """ Return self|value. """
@@ -285,23 +341,28 @@ class SetLike(object):
 
     def __sizeof__(self):
         """ S.__sizeof__() -> size of S in memory, in bytes """
-        pass
+        return sys.getsizeof(self.unique)
 
     def __sub__(self, elem, *args, **kwargs):
         """ Return self-value. """
         if self.is_instance_fake(elem):
+            d_copy = copy.deepcopy(self.unique)
             for every_val in elem:
-                if every_val in self.unique:
-                    self.unique.pop(self.unique.index(every_val))
-        self.do_shuffle()
-        return self.unique
+                if every_val in d_copy:
+                    d_copy.pop(d_copy.index(every_val))
+            self.do_shuffle(d_copy)
+            return d_copy
 
     def __xor__(self, elem, *args, **kwargs):
         """ Return self^value. """
-        priv = self.__and__(elem)
-        print(priv)
-        self.do_shuffle()
-        return self.unique
+        if self.is_instance_fake(elem):
+            priv = self.__and__(elem)
+            d_copy = copy.deepcopy(self.unique)
+            for item in elem:
+                if item not in priv:
+                    d_copy.append(item)
+            self.do_shuffle(d_copy)
+            return d_copy
 
     def __str__(self):
         self.do_shuffle()
@@ -325,3 +386,15 @@ b.add(1)
 print(a, b)
 print(a ^ b, a.symmetric_difference(b))
 print(a >= b)
+print(a > b)
+print(a != b)
+print(a < b)
+print(a == b)
+a &= b
+print(a)
+a += b
+print(a)
+a |= b
+print(a)
+a ^= b
+print(a)
