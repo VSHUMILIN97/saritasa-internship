@@ -167,7 +167,8 @@ class SetLike(object):
         return intersection
 
     def symmetric_difference_update(self, elem, *args, **kwargs):
-        """ Update a set with the symmetric difference of itself and another. """
+        """ Update a set with the symmetric difference
+            of itself and another. """
         self.__xor__(elem)
 
     def union(self, elem, *args, **kwargs):  # real signature unknown

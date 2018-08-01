@@ -111,6 +111,13 @@ class ReadOnlyDict(object):
             raise AttributeError('Not permitted to delete')
 
     def __str__(self):
+        if self.__dict__['user_dict'].get('__unshown__') is None:
+            for key in self.__dict__['user_dict'].keys():
+                if isinstance(self.__dict__['user_dict'].get(key), dict):
+                    if '__unshown__' in self.__dict__['user_dict'].get(key):
+                        self.__dict__['user_dict'][key] = \
+                            self.__dict__['user_dict'][key]['__unshown__']
+            return str(self.__dict__['user_dict'])
         return str(self.__dict__['user_dict']['__unshown__'])
 
 
@@ -128,7 +135,8 @@ if __name__ == '__main__':
     del b.name
     b.name = 'Kippo'
     b.name.Keepo = 'Kyoto'
-    b.info.future = 'NONE'
+    b.info.future = 'BONES'
+    print(b.info)
     b.name.kon = 13
     print(b.name.kon)
     b.name.kon.eax = 11
