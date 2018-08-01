@@ -30,7 +30,7 @@ class ReadOnlyDictTest(unittest.TestCase):
         self.assertIsInstance(funcbbox.a, ReadOnlyDict)
         self.assertIsInstance(bbox.b, ReadOnlyDict)
         self.assertEqual(funcbbox.user_dict, {'mama': 'mom',
-                                              'a': {}})
+                                              'a': {'__unshown__': 2}})
 
     def test_delete_permissions_check(self):
         """ Test checks whether it is possible to del object

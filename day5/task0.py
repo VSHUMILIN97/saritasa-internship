@@ -66,9 +66,10 @@ class ReadOnlyDict(object):
 
     def __setattr__(self, key, value):
         if self.add:
-            if not isinstance(self.user_dict.get(key), dict):
-                self.user_dict.update({key: value})
-            self.user_dict[key] = value
+            if key is not isinstance(key, dict):
+                self.__dict__['user_dict'][key] = {'__unshown__': value}
+            else:
+                self.__dict__['user_dict'][key] = {key: value}
         elif self.change:
             if self.user_dict.get(key) is None:
                 raise ValueError('Not permitted to add')
@@ -96,11 +97,7 @@ class ReadOnlyDict(object):
 
     def __getattr__(self, item):
         if not isinstance(self.user_dict.get(item), dict):
-            if self.add:
-                self.user_dict.update({item: {}})
-                return self.get_sibling(item)
-            else:
-                return self.user_dict[item]
+            return self.user_dict.get(item)
         else:
             return self.get_sibling(item)
 
@@ -111,29 +108,24 @@ class ReadOnlyDict(object):
             raise AttributeError('Not permitted to delete')
 
     def __str__(self):
-        return str([each for each in self.__dict__['user_dict']])
+        return str(self.__dict__['user_dict']['__unshown__'])
 
 
 if __name__ == '__main__':
-    dd = {'name': 'Tor', 'info': {'age': 10, 'secret': {'inp': {'me': 100}}}}
+    dd = {'name': 'Tor', 'info': {'age': 10, 'secret': 12}}
     d2d = copy.deepcopy(dd)
     a = ReadOnlyDict(dd)
     pprint(f'Getting a.info.age - {a.info.age}')
     pprint(f'Getting a.name - {a.name}')
-    pprint(f'Getting a name - {a.info.secret.inp.me}')
-    print(f'Full "a" object dict after reading - {a.user_dict}')
-    print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
     b = setup_dict_factory(d2d, add=True, change=True, delete=True)
-    print(f'This "b" object dict before inserting - {b.user_dict}')
     b.info.future = 'KOI-8'
     b.info.age = 'kek'
-    b.info.secret.inp.me = 400
+    print(b.info.age)
+    print(b.info.future)
     del b.name
-    print(f'Full "b" object dict after deleting and some inserts- {b.user_dict}')
-    b.name = {'a': 11}
-    b.kek = 1
+    b.name = 'Kippo'
+    b.name.Keepo = 'Kyoto'
+    b.info.future = 'NONE'
     b.name.kon = 13
-    print(f'Full "b" object dict after partial inserting - {b.user_dict}')
-    b.name.kon.e = 12
-    b.e.a = 11
-    print(f'Ready "b" dict after changes - {b.user_dict}')
+    print(b.name.kon)
+    b.name.kon.eax = 11
