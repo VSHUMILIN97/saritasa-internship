@@ -110,6 +110,9 @@ class ReadOnlyDict(object):
         else:
             raise AttributeError('Not permitted to delete')
 
+    def __str__(self):
+        return str([each for each in self.__dict__['user_dict']])
+
 
 if __name__ == '__main__':
     dd = {'name': 'Tor', 'info': {'age': 10, 'secret': {'inp': {'me': 100}}}}
@@ -118,19 +121,19 @@ if __name__ == '__main__':
     pprint(f'Getting a.info.age - {a.info.age}')
     pprint(f'Getting a.name - {a.name}')
     pprint(f'Getting a name - {a.info.secret.inp.me}')
+    print(f'Full "a" object dict after reading - {a.user_dict}')
+    print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
     b = setup_dict_factory(d2d, add=True, change=True, delete=True)
-    print(f'"b" object dict before inserting - {b.user_dict}')
+    print(f'This "b" object dict before inserting - {b.user_dict}')
     b.info.future = 'KOI-8'
     b.info.age = 'kek'
     b.info.secret.inp.me = 400
     del b.name
-    print(f'Full "b" object dict after deleting - {b.user_dict}')
+    print(f'Full "b" object dict after deleting and some inserts- {b.user_dict}')
     b.name = {'a': 11}
     b.kek = 1
     b.name.kon = 13
-    print(b.name.kon)
-    print(f'Full "a" object dict after reading - {a.user_dict}')
     print(f'Full "b" object dict after partial inserting - {b.user_dict}')
     b.name.kon.e = 12
     b.e.a = 11
-    print(f'Full "b" object dict after inserting - {b.user_dict}')
+    print(f'Ready "b" dict after changes - {b.user_dict}')
