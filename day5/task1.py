@@ -1,10 +1,15 @@
+import copy
+from random import shuffle
+
+
 class SetLike(object):
 
     def __init__(self, seq):
-        object.__setattr__(self, 'unique', seq)
+        self.unique = []
         for x in seq:
-            if x in self.unique:
+            if x not in self.unique:
                 self.unique.append(x)
+        shuffle(self.unique)
 
     def __iter__(self):
         return self
@@ -19,8 +24,12 @@ class SetLike(object):
 
     def __add__(self, another_set):
         if self.is_instance_fake(another_set):
-            new_object = [x for x in another_set if x not in self.unique]
-            return SetLike(new_object)
+            new_object = copy.deepcopy(self.unique)
+            new_object.extend(
+                [x for x in another_set if x not in self.unique]
+            )
+            shuffle(new_object)
+            return new_object
         else:
             raise TypeError('Unknown opperand for type(s)'
                             f' - SetLike and {type(another_set)}')
@@ -34,8 +43,9 @@ class SetLike(object):
 
     def __iadd__(self, other_set):
         if self.is_instance_fake(other_set):
-            self.unique = [x for x in other_set if x not in self.unique]
-            return self.unique
+            self.unique.extend([x for x in other_set if x not in self.unique])
+            shuffle(self.unique)
+            return SetLike(self.unique)
         else:
             raise TypeError('Unknown opperand for type(s)'
                             f' - SetLike and {type(other_set)}')
@@ -89,12 +99,7 @@ class SetLike(object):
 
         (i.e. all elements that are in both sets.)
         """
-        intersection = []
-        for x in self.unique:
-            for y in elem:
-                if x == y:
-                    intersection.append(x)
-        return SetLike(intersection)
+        return self.__and__(elem)
 
     def intersection_update(self, elem, *args, **kwargs):  # real signature unknown
         """ Update a set with the intersection of itself and another. """
@@ -155,14 +160,8 @@ class SetLike(object):
 
         (i.e. all elements that are in exactly one of the sets.)
         """
-        intersection = []
-        for x in self.unique:
-            for y in elem:
-                if x != y:
-                    intersection.append(x)
-        for x in elem:
-            if x not in intersection:
-                intersection.append(x)
+        intersection = [x for x in self.unique if x not in elem]
+        intersection.extend([x for x in elem if x not in intersection])
         return intersection
 
     def symmetric_difference_update(self, elem, *args, **kwargs):  # real signature unknown
@@ -196,9 +195,11 @@ class SetLike(object):
             if y not in self.unique:
                 self.unique.append(y)
 
-    def __and__(self, *args, **kwargs):  # real signature unknown
-        """ Return self&value. """
-        pass
+    def __and__(self, key, *args, **kwargs):  # real signature unknown
+        if self.is_instance_fake(key):
+            intersection = [x for x in self.unique if x in key]
+            shuffle(intersection)
+            return intersection
 
     def __contains__(self, y):  # real signature unknown; restored from __doc__
         """ x.__contains__(y) <==> y in x. """
@@ -214,6 +215,9 @@ class SetLike(object):
     def __ge__(self, *args, **kwargs):  # real signature unknown
         """ Return self>=value. """
         pass
+
+    def __getattr__(self, item):
+        return item
 
     def __gt__(self, *args, **kwargs):  # real signature unknown
         """ Return self>value. """
@@ -237,7 +241,7 @@ class SetLike(object):
 
     def __len__(self, *args, **kwargs):  # real signature unknown
         """ Return len(self). """
-        pass
+        return self.unique
 
     def __le__(self, *args, **kwargs):  # real signature unknown
         """ Return self<=value. """
@@ -297,5 +301,9 @@ class SetLike(object):
     __hash__ = None
 
 
-a = SetLike([1, 2, 3, 3])
+a = SetLike([1, 2, 3, 3, 15, 22, 22])
+a += {11}
 print(a)
+b = SetLike([2, 4, 6, 10])
+print(a.intersection(b), a.__and__(b))
+a.add(12); print(a)
