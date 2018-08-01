@@ -66,7 +66,9 @@ class ReadOnlyDict(object):
 
     def __setattr__(self, key, value):
         if self.add:
-            self.user_dict.setdefault(key, value)
+            if not isinstance(self.user_dict.get(key), dict):
+                self.user_dict.update({key: value})
+            self.user_dict[key] = value
         elif self.change:
             if self.user_dict.get(key) is None:
                 raise ValueError('Not permitted to add')
@@ -94,7 +96,11 @@ class ReadOnlyDict(object):
 
     def __getattr__(self, item):
         if not isinstance(self.user_dict.get(item), dict):
-            return {item: self.user_dict.get(item)}
+            if self.add:
+                self.user_dict.update({item: {}})
+                return self.get_sibling(item)
+            else:
+                return self.user_dict[item]
         else:
             return self.get_sibling(item)
 
@@ -106,19 +112,25 @@ class ReadOnlyDict(object):
 
 
 if __name__ == '__main__':
-    dd = {'name': 'Tor', 'info': {'age': 10, 'secret': 12}}
+    dd = {'name': 'Tor', 'info': {'age': 10, 'secret': {'inp': {'me': 100}}}}
     d2d = copy.deepcopy(dd)
     a = ReadOnlyDict(dd)
     pprint(f'Getting a.info.age - {a.info.age}')
     pprint(f'Getting a.name - {a.name}')
+    pprint(f'Getting a name - {a.info.secret.inp.me}')
     b = setup_dict_factory(d2d, add=True, change=True, delete=True)
     print(f'"b" object dict before inserting - {b.user_dict}')
     b.info.future = 'KOI-8'
     b.info.age = 'kek'
+    b.info.secret.inp.me = 400
     del b.name
     print(f'Full "b" object dict after deleting - {b.user_dict}')
-    b.name = {}
+    b.name = {'a': 11}
+    b.kek = 1
     b.name.kon = 13
     print(b.name.kon)
     print(f'Full "a" object dict after reading - {a.user_dict}')
+    print(f'Full "b" object dict after partial inserting - {b.user_dict}')
+    b.name.kon.e = 12
+    b.e.a = 11
     print(f'Full "b" object dict after inserting - {b.user_dict}')
