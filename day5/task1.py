@@ -79,12 +79,15 @@ class SetLike(object):
         Returns:
             SetLike: Same SetLike with new value (if not present)
         """
-        if elem in self.unique:
-            pass
+        if hasattr(elem, '__iter__'):
+            for item in elem:
+                if elem in self.unique:
+                    pass
+                else:
+                    self.unique.append(item)
+                    self.do_shuffle()
         else:
             self.unique.append(elem)
-            self.do_shuffle()
-        return self.unique
 
     def clear(self, *args, **kwargs):
         """ Remove all elements from this set.
@@ -146,7 +149,6 @@ class SetLike(object):
         if self.is_instance_fake(elem):
             intersection = [obj for obj in self.unique if obj in elem]
             self.do_shuffle(intersection)
-            print(intersection)
             return intersection
 
     def intersection_update(self, elem, *args, **kwargs):
@@ -290,7 +292,7 @@ class SetLike(object):
     def __ior__(self, elem, *args, **kwargs):  # DONE
         """ Return self|=value. """
         self.unique = self.union(elem)
-        return self.unique
+        return self.union(elem)
 
     def __isub__(self, elem, *args, **kwargs):  # DONE
         """ Return self-=value. """
@@ -359,7 +361,8 @@ class SetLike(object):
 
     def __sub__(self, elem, *args, **kwargs):
         """ Return self-value. """
-        return self.difference_update(elem)
+        self.difference_update(elem)
+        return self.unique
 
     def __xor__(self, elem, *args, **kwargs):
         """ Return self^value. """
