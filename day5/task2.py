@@ -1,5 +1,7 @@
 """
-ADD MATRIX STUFF
+TO-DO:
+    * In-place operations
+    * ?
 """
 import copy
 
@@ -25,7 +27,7 @@ class MimicMatrix:
         """
         if self.m_size[0] == 0:
             raise ValueError('Put dimensions to matrix')
-        for matrix_index in range(len(self.matrix)):
+        for matrix_index, _ in enumerate(self.matrix):
             if len(self.matrix[matrix_index]) != \
                     len(self.matrix[matrix_index - 1]):
                 raise ValueError('Rows are not the same size')
@@ -76,10 +78,19 @@ class MimicMatrix:
         """
         if self._is_matrix_compatible(other_matrix):
             rows, values = self.m_size
-            for row in range(rows):
-                for value in range(values):
-                    self.matrix[row][value] += other_matrix[row][value]
-        return self.matrix
+            addition_matrix = [[self.matrix[row][value] + other_matrix[row][value]
+                                for value in range(values)]
+                               for row in range(rows)]
+            return addition_matrix
+
+    def __radd__(self, other_matrix):
+        """ Magic method that mimic Matrix addition
+
+        Notes:
+            In any cases you would not be able to add anything else,
+            but MimicMatrix to MimicMatrix, so it is just a stab
+        """
+        return self.__add__(other_matrix)
 
     def __getitem__(self, index):
         """ Simply returns item from matrix by given index """
@@ -96,14 +107,39 @@ class MimicMatrix:
         """
         if self._is_matrix_compatible(other_matrix):
             rows, values = self.m_size
-            for row in range(rows):
-                for value in range(values):
-                    self.matrix[row][value] -= other_matrix[row][value]
-        return self.matrix
+            subtracted_matrix = [[self.matrix[row][value] - other_matrix[row][value]
+                                  for value in range(values)]
+                                 for row in range(rows)]
+
+            return subtracted_matrix
+
+    def __rsub__(self, other_matrix):
+        """ Magic method that mimic Matrix subtraction
+
+        Notes:
+            In any cases you would not be able to sub anything else,
+            but MimicMatrix to MimicMatrix, so it is just a stab
+        """
+        return self.__sub__(other_matrix)
 
     def __neg__(self):
         """ Magic method that mimic Matrix negation operation """
         return self.__mul__(-1)
+
+    def __imul__(self, other_matrix):
+        """ In-place multiplication """
+        result = self.__mul__(other_matrix)
+        return result
+
+    def __iadd__(self, other_matrix):
+        """ In-place addition """
+        result = self.__add__(other_matrix)
+        return result
+
+    def __isub__(self, other_matrix):
+        """ In-place subtraction """
+        result = self.__sub__(other_matrix)
+        return result
 
     def __mul__(self, other_matrix_or_num):
         """ Magic method that mimic Matrix multiplication
@@ -116,7 +152,7 @@ class MimicMatrix:
 
                 ------------------------
                 (1, 2),               (1 |x2, 2 |x2),
-                (    )   x  2   ->    (              )
+                (    )   x  2   ->    (            )
                 (3, 4)                (3 |x2, 4 |x2)
         Args:
             other_matrix_or_num: MimicMatrix or int type value
@@ -127,20 +163,19 @@ class MimicMatrix:
         if self._is_matrix_mul_compatible(other_matrix_or_num):
             other_matrix_or_num = list(zip(*other_matrix_or_num))
             new_structure = []
-            st = []
+            state = []
             counter = 0
             rows, values = self.m_size
             for row in range(rows):
                 for tuple_len, _ in enumerate(other_matrix_or_num):
                     for value in range(values):
-                        val = self.matrix[row][value] * \
-                              other_matrix_or_num[tuple_len][value]
-                        counter += val
+                        counter += self.matrix[row][value] * \
+                                   other_matrix_or_num[tuple_len][value]
                     new_structure.append(counter)
                     counter = 0
-                st.append(copy.copy(new_structure))
+                state.append(copy.copy(new_structure))
                 new_structure.clear()
-            return st
+            return state
         else:
             copyr = copy.copy(self.matrix)
             rows, values = self.m_size

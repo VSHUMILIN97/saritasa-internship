@@ -37,8 +37,7 @@ class MatrixTest(unittest.TestCase):
                          "'MimicMatrix' object has no attribute 'spoon'")
 
     def test_matrix_addition_is_possible_and_correct(self):
-        """ Test checks whether it is possible to
-        """
+        """ Test checks whether it is possible to add to Matrix """
         m1m = MimicMatrix([[1, 2, 4],
                            [5, 7, 9]])
         m2m = MimicMatrix([[1, 2, 5],
@@ -48,6 +47,7 @@ class MatrixTest(unittest.TestCase):
                           [15, 21, 4]], obj)
 
     def test_matrix_substruction_is_possible_and_correct(self):
+        """ Test checks whether it is possible to subtract from Matrix"""
         m1m = MimicMatrix([[1, 2, 4],
                            [5, 7, 9]])
         m2m = MimicMatrix([[1, 2, 5],
@@ -55,6 +55,19 @@ class MatrixTest(unittest.TestCase):
         obj = m1m - m2m
         self.assertEqual([[0, 0, -1],
                           [-5, -7, 14]], obj)
+
+    def test_matrix_right_operations_are_possible_and_correct(self):
+        """ Tests checks correctness of right operations """
+        m1m = MimicMatrix([[1, 2, 4],
+                           [5, 7, 9]])
+        m2m = MimicMatrix([[1, 2, 5],
+                           [10, 14, -5]])
+        obj = m2m + m1m
+        self.assertEqual([[2, 4, 9],
+                          [15, 21, 4]], obj)
+        obj = m2m - m1m
+        self.assertEqual([[0, 0, 1],
+                          [5, 7, -14]], obj)
 
     def test_multiplication_of_matrix_with_either_matrix_and_number(self):
         """ Test checks whether non-square matrix can be multiplied by number
@@ -115,7 +128,7 @@ class MatrixTest(unittest.TestCase):
                                [2, 4, 6, 8]])
 
     def test_negate_matrix(self):
-        """ Test checks whether it is possible to mul matrix on -1"""
+        """ Test checks whether it is possible to negate """
         m3m = MimicMatrix([[2, 3],
                            [3, 5]])
         self.assertEqual(-m3m, [[-2, -3],
