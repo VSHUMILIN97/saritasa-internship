@@ -1,7 +1,6 @@
 """
 TO-DO:
     * In-place operations
-    * ?
 """
 import copy
 
@@ -166,7 +165,8 @@ class MimicMatrix:
             other_matrix_or_num = list(zip(*other_matrix_or_num))
             original_matrix = copy.deepcopy(self.matrix)
             return [[sum(ele_a * ele_b for ele_a, ele_b in zip(row_a, col_b))
-                     for col_b in other_matrix_or_num] for row_a in original_matrix]
+                     for col_b in other_matrix_or_num]
+                    for row_a in original_matrix]
         else:
             copyr = copy.copy(self.matrix)
             rows, values = self.m_size

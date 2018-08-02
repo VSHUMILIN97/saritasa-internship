@@ -5,33 +5,35 @@ import sys
 
 class SetLike(object):
 
+    __slots__ = ['unique', 'counter']
+
     def __init__(self, seq):
-        self.unique = []
-        self.zero = -1
-        for x in seq:
-            if x not in self.unique:
-                self.unique.append(x)
+        object.__setattr__(self, 'unique', [])
+        self.unique = self._set_builder(seq)
         self.do_shuffle()
 
+    @staticmethod
+    def _set_builder(seq):
+        clear_file = []
+        for elem in seq:
+            if elem not in clear_file:
+                clear_file.append(elem)
+        return clear_file
+
     def __iter__(self):
+        self.counter = -1
         return self
 
     def __next__(self):
-        if self.zero < self.__len__() - 1:
-            self.zero += 1
-            return self.unique[self.zero]
+        if self.counter < self.__len__() - 1:
+            self.counter += 1
+            return self.unique[self.counter]
         else:
-            self.zero = -1
             raise StopIteration()
 
     def __add__(self, another_set):
-        if self.is_instance_fake(another_set):
-            new_object = copy.deepcopy(self.unique)
-            new_object.extend([x for x in another_set if x not in new_object])
-            return new_object
-        else:
-            raise TypeError('Unknown opperand for type(s)'
-                            f' - SetLike and {type(another_set)}')
+        new_object = copy.copy(self.add(another_set))
+        return new_object
 
     def do_shuffle(self, possible_arg=None):
         """ Function which purpose is to mimic the set behaviour.
@@ -65,13 +67,8 @@ class SetLike(object):
             return False
 
     def __iadd__(self, other_set):
-        if self.is_instance_fake(other_set):
-            self.unique.extend([x for x in other_set if x not in self.unique])
-            self.do_shuffle()
-            return SetLike(self.unique)
-        else:
-            raise TypeError('Unknown opperand for type(s)'
-                            f' - SetLike and {type(other_set)}')
+        self.add(other_set)
+        return self.unique
 
     def add(self, elem, *args, **kwargs):
         """ Add an element to a set.
@@ -104,7 +101,7 @@ class SetLike(object):
             None
         """
         self.do_shuffle()
-        return copy.deepcopy(self.unique.copy())
+        return copy.deepcopy(self.unique)
 
     def difference(self, elem, *args, **kwargs):
         """
@@ -124,7 +121,12 @@ class SetLike(object):
 
     def difference_update(self, elem, *args, **kwargs):
         """ Remove all elements of another set from this set. """
-        self.__sub__(elem)
+        update_list = self.difference(elem)
+        copied = copy.deepcopy(self.unique)
+        self.unique = [val for val in copied
+                       if val in update_list and elem not in elem]
+        self.do_shuffle()
+        return None
 
     def discard(self, elem, *args, **kwargs):
         """
@@ -141,7 +143,11 @@ class SetLike(object):
 
         (i.e. all elements that are in both sets.)
         """
-        return self.__and__(elem)
+        if self.is_instance_fake(elem):
+            intersection = [obj for obj in self.unique if obj in elem]
+            self.do_shuffle(intersection)
+            print(intersection)
+            return intersection
 
     def intersection_update(self, elem, *args, **kwargs):
         """ Update a set with the intersection of itself and another. """
@@ -152,25 +158,33 @@ class SetLike(object):
 
     def isdisjoint(self, elem, *args, **kwargs):
         """ Return True if two sets have a null intersection. """
-        intersection = []
-        for item in self.unique:
-            for subitem in elem:
-                if item == subitem:
-                    intersection.append(item)
-        if not intersection:
+        if not self.intersection(elem):
             return True
-        else:
-            return False
+        return False
 
     def issubset(self, elem, *args, **kwargs):
         """ Report whether another set contains this set. """
-        self.__ge__(elem)
+        if self.is_instance_fake(elem):
+            if len(self.unique) >= len(elem):
+                return False
+            for item in self.unique:
+                if item in elem:
+                    pass
+                else:
+                    return False
+            return True
 
-    def issuperset(self, elem, *args, **kwargs):
+    def issuperset(self, elem, *args, **kwargs):  # DONE
         """ Report whether this set contains another set. """
-        self.__contains__(elem)
+        if self.is_instance_fake(elem):
+            for item in elem:
+                if item in self.unique:
+                    pass
+                else:
+                    return False
+            return True
 
-    def pop(self, elem, *args, **kwargs):
+    def pop(self, elem, *args, **kwargs):  # DONE
         """
         Remove and return an arbitrary set element.
         Raises KeyError if the set is empty.
@@ -178,16 +192,16 @@ class SetLike(object):
         if not self.unique:
             raise KeyError('No more elements in this beautiful set')
         elif elem in self.unique:
-            return SetLike(self.unique.pop(self.unique.index(elem)))
+            return self.unique.pop(self.unique.index(elem))
 
-    def remove(self, elem, *args, **kwargs):
+    def remove(self, elem, *args, **kwargs):  # DONE
         """
         Remove an element from a set; it must be a member.
 
         If the element is not a member, raise a KeyError.
         """
         try:
-            self.unique.pop(elem)
+            self.unique.pop(self.unique.index(elem))
         except ValueError:
             raise KeyError('Not in this not like this set')
 
@@ -197,15 +211,18 @@ class SetLike(object):
 
         (i.e. all elements that are in exactly one of the sets.)
         """
-        intersection = [obj for obj in self.unique if obj not in elem]
-        intersection.extend([obj for obj in elem if obj not in intersection])
-        intersection = self.do_shuffle(intersection)
-        return intersection
+        intersection_res = self.intersection(elem)
+        val = [item for item in self.unique if item not in intersection_res]
+        val.extend([item for item in elem
+                    if item not in intersection_res and
+                    item not in val])
+        return val
 
     def symmetric_difference_update(self, elem, *args, **kwargs):
         """ Update a set with the symmetric difference
             of itself and another. """
-        self.__xor__(elem)
+        self.unique = self.symmetric_difference(elem)
+        return self.unique
 
     def union(self, elem, *args, **kwargs):  # real signature unknown
         """
@@ -213,7 +230,14 @@ class SetLike(object):
 
         (i.e. all elements that are in either set.)
         """
-        return self.__or__(elem)
+        if self.is_instance_fake(elem):
+            union = [obj for obj in self.unique]
+            union.extend([obj for obj in elem if obj not in self.unique])
+            self.do_shuffle(union)
+            return union
+        else:
+            raise TypeError('Unknown operation for type(s)'
+                            f' - SetLike and {type(elem)}')
 
     def update(self, elem, *args, **kwargs):
         """ Update a set with the union of itself and others. """
@@ -221,13 +245,10 @@ class SetLike(object):
             if item not in self.unique:
                 self.unique.append(item)
 
-    def __and__(self, elem, *args, **kwargs):
-        if self.is_instance_fake(elem):
-            intersection = [obj for obj in self.unique if obj in elem]
-            self.do_shuffle(intersection)
-            return intersection
+    def __and__(self, elem, *args, **kwargs):  # DONE
+        return self.intersection(elem)
 
-    def __contains__(self, elem):
+    def __contains__(self, elem):  # DONE
         """ x.__contains__(y) <==> y in x. """
         if elem in self.unique:
             return True
@@ -244,13 +265,7 @@ class SetLike(object):
 
     def __ge__(self, elem, *args, **kwargs):
         """ Return self>=value. """
-        if self.is_instance_fake(elem):
-            for item in elem:
-                if item in self.unique:
-                    pass
-                else:
-                    return False
-            return True
+        return self.issuperset(elem)
 
     def __getattr__(self, item):
         return item
@@ -267,60 +282,31 @@ class SetLike(object):
                 return False
             return True
 
-    def __iand__(self, elem, *args, **kwargs):
+    def __iand__(self, elem, *args, **kwargs):  # DONE
         """ Return self&=value. """
-        if self.is_instance_fake(elem):
-            intersection = [obj for obj in self.unique if obj in elem]
-            self.unique = copy.deepcopy(intersection)
-            self.do_shuffle()
-            return self.unique
-
-    def __ior__(self, elem, *args, **kwargs):
-        """ Return self|=value. """
-        if self.is_instance_fake(elem):
-            union = [obj for obj in self.unique]
-            union.extend([obj for obj in elem if obj not in self.unique])
-            self.unique = copy.deepcopy(union)
-            self.do_shuffle()
-            return self.unique
-        else:
-            raise TypeError('Unknown operation for type(s)'
-                            f' - SetLike and {type(elem)}')
-
-    def __isub__(self, elem, *args, **kwargs):
-        """ Return self-=value. """
-        if self.is_instance_fake(elem):
-            for every_val in elem:
-                if every_val in self.unique:
-                    self.unique.pop(self.unique.index(every_val))
-            self.do_shuffle()
-            return self.unique
-
-    def __ixor__(self, elem, *args, **kwargs):
-        """ Return self^=value. """
-        intersection = self.__and__(elem)
-        for item in elem:
-            if item not in intersection:
-                self.unique.append(item)
-        self.do_shuffle()
+        self.unique = self.intersection(elem)
         return self.unique
 
-    def __len__(self, *args, **kwargs):
+    def __ior__(self, elem, *args, **kwargs):  # DONE
+        """ Return self|=value. """
+        self.unique = self.union(elem)
+        return self.unique
+
+    def __isub__(self, elem, *args, **kwargs):  # DONE
+        """ Return self-=value. """
+        self.difference_update(elem)
+        return self.unique
+
+    def __ixor__(self, elem, *args, **kwargs):  # DONE
+        """ Return self^=value. """
+        return self.symmetric_difference_update(elem)
+
+    def __len__(self, *args, **kwargs):  # DONE
         """ Return len(self). """
         return len(self.unique)
 
-    def __le__(self, elem, *args, **kwargs):
+    def __le__(self, elem, *args, **kwargs):  # DONE
         """ Return self<=value. """
-        if self.is_instance_fake(elem):
-            for item in self.unique:
-                if item in elem:
-                    pass
-                else:
-                    return False
-            return True
-
-    def __lt__(self, elem, *args, **kwargs):
-        """ Return self<value. """
         if self.is_instance_fake(elem):
             for item in self.unique:
                 if item in elem:
@@ -331,30 +317,21 @@ class SetLike(object):
                 return False
             return True
 
-    def __ne__(self, elem, *args, **kwargs):
+    def __lt__(self, elem, *args, **kwargs):  # DONE
+        """ Return self<value. """
+        return self.issubset(elem)
+
+    def __ne__(self, elem, *args, **kwargs):  # DONE
         """ Return self!=value. """
-        if self.is_instance_fake(elem):
-            for item in self.unique:
-                if item in elem:
-                    pass
-                else:
-                    return True
-            return False
+        return self.isdisjoint(elem)
 
-    def __or__(self, elem, *args, **kwargs):
+    def __or__(self, elem, *args, **kwargs):  # DONE
         """ Return self|value. """
-        if self.is_instance_fake(elem):
-            union = [obj for obj in self.unique]
-            union.extend([obj for obj in elem if obj not in self.unique])
-            self.do_shuffle(union)
-            return union
-        else:
-            raise TypeError('Unknown operation for type(s)'
-                            f' - SetLike and {type(elem)}')
+        return self.union(elem)
 
-    def __rand__(self, *args, **kwargs):
+    def __rand__(self, elem, *args, **kwargs):  # DONE
         """ Return value&self. """
-        pass
+        return SetLike(elem).intersection(self.unique)
 
     def __reduce__(self, *args, **kwargs):
         """ Return state information for pickling. """
@@ -366,20 +343,15 @@ class SetLike(object):
 
     def __ror__(self, elem, *args, **kwargs):
         """ Return value|self. """
-        intersection = [obj for obj in self.unique if obj in elem]
-        for item in elem:
-            if item not in intersection:
-                self.unique.append(item)
-        self.do_shuffle()
-        return self.unique
+        return SetLike(elem).union(self.unique)
 
-    def __rsub__(self, *args, **kwargs):
+    def __rsub__(self, elem, *args, **kwargs):
         """ Return value-self. """
-        pass
+        return SetLike(elem).__sub__(self.unique)
 
-    def __rxor__(self, *args, **kwargs):
+    def __rxor__(self, elem, *args, **kwargs):
         """ Return value^self. """
-        pass
+        return SetLike(elem).symmetric_difference(self.unique)
 
     def __sizeof__(self):
         """ S.__sizeof__() -> size of S in memory, in bytes """
@@ -387,24 +359,11 @@ class SetLike(object):
 
     def __sub__(self, elem, *args, **kwargs):
         """ Return self-value. """
-        if self.is_instance_fake(elem):
-            d_copy = copy.deepcopy(self.unique)
-            for every_val in elem:
-                if every_val in d_copy:
-                    d_copy.pop(d_copy.index(every_val))
-            self.do_shuffle(d_copy)
-            return d_copy
+        return self.difference_update(elem)
 
     def __xor__(self, elem, *args, **kwargs):
         """ Return self^value. """
-        if self.is_instance_fake(elem):
-            intersection = self.__and__(elem)
-            d_copy = copy.deepcopy(self.unique)
-            for item in elem:
-                if item not in intersection:
-                    d_copy.append(item)
-            self.do_shuffle(d_copy)
-            return d_copy
+        return self.symmetric_difference(elem)
 
     def __str__(self):
         self.do_shuffle()

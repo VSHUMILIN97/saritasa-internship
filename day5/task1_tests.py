@@ -1,3 +1,9 @@
+"""
+TO-DO:
+    * Split tests
+    * Write more tests
+"""
+
 import unittest
 from day5.task1 import SetLike
 
@@ -35,12 +41,6 @@ class SetLikeObjectTest(unittest.TestCase):
 
     def test_that_checks_all_methods(self):
         a = SetLike([1, 2, 3, 3])
-        b = SetLike([1, 5])
-        self.assertListEqual(sorted(a.intersection(b)), [1])
-        self.assertIsNone(a.clear())
-        with self.assertRaises(KeyError) as cm:
-            a.pop(1)
-        self.assertEqual(cm.exception,
-                         'No more elements in this beautiful set')
-        self.assertEqual(sorted(b), [1, 5])
-        self.assertFalse(sorted(b.issubset(a)))
+        b = SetLike([1, 3])
+        print(a.issuperset(b))
+        print(a > b)
