@@ -221,13 +221,13 @@ class SetLike(object):
             if item not in self.unique:
                 self.unique.append(item)
 
-    def __and__(self, elem, *args, **kwargs):  # real signature unknown
+    def __and__(self, elem, *args, **kwargs):
         if self.is_instance_fake(elem):
             intersection = [obj for obj in self.unique if obj in elem]
             self.do_shuffle(intersection)
             return intersection
 
-    def __contains__(self, elem):  # real signature unknown; restored from __doc__
+    def __contains__(self, elem):
         """ x.__contains__(y) <==> y in x. """
         if elem in self.unique:
             return True

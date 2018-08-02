@@ -108,6 +108,9 @@ class ReadOnlyDict(object):
             raise AttributeError('Not permitted to delete')
 
     def __str__(self):
+        return self.__presentable()
+
+    def __presentable(self):
         if self.__dict__['user_dict'].get('__unshown__') is None:
             for key in self.__dict__['user_dict'].keys():
                 if isinstance(self.__dict__['user_dict'].get(key), dict):
@@ -118,14 +121,7 @@ class ReadOnlyDict(object):
         return str(self.__dict__['user_dict']['__unshown__'])
 
     def __repr__(self):
-        if self.__dict__['user_dict'].get('__unshown__') is None:
-            for key in self.__dict__['user_dict'].keys():
-                if isinstance(self.__dict__['user_dict'].get(key), dict):
-                    if '__unshown__' in self.__dict__['user_dict'].get(key):
-                        self.__dict__['user_dict'][key] = \
-                            self.__dict__['user_dict'][key]['__unshown__']
-            return str(self.__dict__['user_dict'])
-        return str(self.__dict__['user_dict']['__unshown__'])
+        return self.__presentable()
 
 
 if __name__ == '__main__':
