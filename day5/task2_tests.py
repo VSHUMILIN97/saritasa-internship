@@ -19,8 +19,8 @@ class MatrixTest(unittest.TestCase):
         """ Test that checks whether matrix object raises Error
             if they are not the same size
         """
-        m1m = MimicMatrix([[1, 2, 4], [5, 7, 9]])
-        m2m = MimicMatrix([[1, 2, 5], [10, 14, -5]])
+        m1m = MimicMatrix([(1, 2, 4), (5, 7, 9)])
+        m2m = MimicMatrix([(1, 2, 5), (10, 14, -5)])
         m3m = MimicMatrix([[1, 2], [4, 6]])
         self.assertTrue(m1m._is_matrix_compatible(m2m))
         with self.assertRaises(ValueError) as cm:
@@ -90,10 +90,12 @@ class MatrixTest(unittest.TestCase):
                                 [3, 4, 5]])
         with self.assertRaises(TypeError) as cm:
             wrong_mm ** 2
-        self.assertEqual(str(cm.exception), 'Unsupported matrix type (must be square)')
+        self.assertEqual(str(cm.exception),
+                         'Unsupported matrix type (must be square)')
         with self.assertRaises(TypeError) as cm:
             wrong_mm ** '12'
-        self.assertEqual(str(cm.exception), "Cannot involute on - <class 'str'> type")
+        self.assertEqual(str(cm.exception),
+                         "Cannot involute on - <class 'str'> type")
 
     def test_matrix_is_transposed(self):
         """ Test checks whether transpose was successful"""
@@ -101,10 +103,16 @@ class MatrixTest(unittest.TestCase):
                           [5, 6, 7, 8],
                            [9, 10, 11, 12]]).transpose()
         self.assertEqual(m3m,
-                         [(1, 5, 9),
-                          (2, 6, 10),
-                          (3, 7, 11),
-                          (4, 8, 12)])
+                         [[1, 5, 9],
+                          [2, 6, 10],
+                          [3, 7, 11],
+                          [4, 8, 12]])
+        m4m = MimicMatrix([[1, 2],
+                           [3, 4],
+                           [5, 6],
+                           [7, 8]]).transpose()
+        self.assertEqual(m4m, [[1, 3, 5, 7],
+                               [2, 4, 6, 8]])
 
     def test_negate_matrix(self):
         """ Test checks whether it is possible to mul matrix on -1"""
