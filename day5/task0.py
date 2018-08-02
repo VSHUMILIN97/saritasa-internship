@@ -9,10 +9,10 @@ Notes:
 
 
 def setup_dict_factory(dictionary, add=False, change=False, delete=False):
-    return ReadOnlyDict(dictionary, add, change, delete)
+    return FactoryMimicDict(dictionary, add, change, delete)
 
 
-class ReadOnlyDict(object):
+class FactoryMimicDict(object):
     """ This class initialise a ReadOnly dictionary which
         purpose is to make dicts much more flexible in
         customization and ease accessing to their attributes
@@ -89,8 +89,8 @@ class ReadOnlyDict(object):
             object: Value that stores in the 'leaf' of the dict
         """
         if isinstance(self.user_dict[item], dict):
-            sibling = ReadOnlyDict(self.user_dict[item],
-                                   self.add, self.change, self.delete)
+            sibling = FactoryMimicDict(self.user_dict[item],
+                                       self.add, self.change, self.delete)
             return sibling
         else:
             return self.user_dict[item]

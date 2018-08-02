@@ -1,5 +1,5 @@
 import unittest
-from day5.task0 import ReadOnlyDict, setup_dict_factory
+from day5.task0 import FactoryMimicDict, setup_dict_factory
 
 
 class ReadOnlyDictTest(unittest.TestCase):
@@ -9,7 +9,7 @@ class ReadOnlyDictTest(unittest.TestCase):
             to dict without permissiob
         """
         funcbbox = setup_dict_factory({'mama': 'mom'})
-        bbox = ReadOnlyDict({'mama': 'mom', 'otec': 'dad'})
+        bbox = FactoryMimicDict({'mama': 'mom', 'otec': 'dad'})
         with self.assertRaises(ValueError) as cm:
             bbox.granddad = 'dedushka'
         with self.assertRaises(ValueError) as cm2:
@@ -24,19 +24,21 @@ class ReadOnlyDictTest(unittest.TestCase):
             using cls attributes
         """
         funcbbox = setup_dict_factory({'mama': 'mom'}, add=True)
-        bbox = ReadOnlyDict({'mama': 'mom', 'otec': 'dad'}, add=True)
+        bbox = FactoryMimicDict({'mama': 'mom', 'otec': 'dad'}, add=True)
         funcbbox.a = 2
         bbox.b = 3
-        self.assertEqual(funcbbox.a, 2)
-        self.assertEqual(bbox.b, 3)
-        self.assertEqual(funcbbox.user_dict, {'mama': 'mom', 'a': 2})
+        self.assertEqual(funcbbox.user_dict,
+                         {'mama': 'mom', 'a': {'__unshown__': 2}})
+        self.assertEqual(bbox.user_dict,
+                         {'mama': 'mom', 'b': {'__unshown__': 3},
+                          'otec': 'dad'})
 
     def test_delete_permissions_check(self):
         """ Test checks whether it is possible to del object
         """
         funcbbox = setup_dict_factory({'mama': {'lambdaY': {1: 2}}},
                                       delete=True)
-        bbox = ReadOnlyDict({'mama': 'mom', 'otec': 'dad'}, delete=True)
+        bbox = FactoryMimicDict({'mama': 'mom', 'otec': 'dad'}, delete=True)
         del funcbbox.mama.lambdaY
         self.assertEqual({'mama': {}}, funcbbox.user_dict)
         del bbox.otec
