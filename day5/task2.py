@@ -88,7 +88,7 @@ class MimicMatrix:
             counter = 0
             rows, values = self.m_size
             for row in range(rows):
-                for tuple_len in range(len(other_matrix_or_num)):
+                for tuple_len, _ in enumerate(other_matrix_or_num):
                     for value in range(values):
                         val = self.matrix[row][value] * other_matrix_or_num[tuple_len][value]
                         counter += val
@@ -106,7 +106,7 @@ class MimicMatrix:
             return copyr
 
     def __pow__(self, number, modulo=None):
-        if type(number) is int:
+        if isinstance(number, int):
             matrix = None
             columns, rows = self.m_size
             if columns != rows:
