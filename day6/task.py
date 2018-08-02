@@ -8,19 +8,39 @@ from functools import wraps
 
 
 def retry(exceptions, retries=None, delay=3):
-    """ This function is decorator which handle fetched
-        exceptions and retries function as much, as user
-        prefer
+    """ This function is stub for fetching argument which are
+        exceptions, retries and delay
 
     Args:
         exceptions: The exception to check. may be a tuple of
             exceptions to check.
         retries: Number of times to try (not retry) before giving up.
         delay: Initial delay between retries in seconds.
+
+    Returns:
+        object: The result of decorated function by chain
     """
-    def deco_retry(func):
+    def decorator_retry(func):
+        """ Real decorator which handle function arguments and
+            result of its work.
+
+        Args:
+            func: function to decorate
+
+        Returns:
+            object: The result of decorated function
+        """
         @wraps(func)
         def f_retry(*args, **kwargs):
+            """ Decoy function, which place herself instead of original
+
+            Args:
+                *args: Any positional args from original function
+                **kwargs: Any kwargs from original function
+
+            Returns:
+                object: The result of original function
+            """
             user_retries, user_delay = retries, delay
             if user_retries is None:
                 user_retries = True
@@ -38,7 +58,7 @@ def retry(exceptions, retries=None, delay=3):
                     user_retries -= 1
             return func(*args, **kwargs)
         return f_retry
-    return deco_retry
+    return decorator_retry
 
 
 if __name__ == '__main__':
