@@ -106,4 +106,13 @@ class MatrixTest(unittest.TestCase):
                           (3, 7, 11),
                           (4, 8, 12)])
 
-
+    def test_negate_matrix(self):
+        """ Test checks whether it is possible to mul matrix on -1"""
+        m3m = MimicMatrix([[2, 3],
+                           [3, 5]])
+        self.assertEqual(-m3m, [[-2, -3],
+                                [-3, -5]])
+        m2m = MimicMatrix([[1], [4]])
+        nm2m = - m2m
+        self.assertEqual(nm2m, [[-1],
+                                [-4]])

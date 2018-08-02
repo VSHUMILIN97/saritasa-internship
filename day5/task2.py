@@ -76,6 +76,9 @@ class MimicMatrix:
                             ' - MimicMatrix and int}')
         return self.matrix
 
+    def __neg__(self):
+        return self.__mul__(-1)
+
     def __mul__(self, other_matrix_or_num):
         if self._is_matrix_mul_compatible(other_matrix_or_num):
             other_matrix_or_num = list(zip(*other_matrix_or_num))
