@@ -15,9 +15,9 @@ class ReadOnlyDictTest(unittest.TestCase):
         with self.assertRaises(ValueError) as cm2:
             funcbbox.grandmom = 'babushka'
         self.assertEqual(str(cm.exception),
-                         'Not permitted to change')
+                         'Not permitted to add/change at all')
         self.assertEqual(str(cm2.exception),
-                         'Not permitted to change')
+                         'Not permitted to add/change at all')
 
     def test_extend_dictionary_on_attribute_with_permission(self):
         """ Test checks whether it is possible to extend dictionary
@@ -27,8 +27,8 @@ class ReadOnlyDictTest(unittest.TestCase):
         bbox = ReadOnlyDict({'mama': 'mom', 'otec': 'dad'}, add=True)
         funcbbox.a = 2
         bbox.b = 3
-        self.assertEqual(funcbbox.a, {'a': 2})
-        self.assertEqual(bbox.b, {'b': 3})
+        self.assertEqual(funcbbox.a, 2)
+        self.assertEqual(bbox.b, 3)
         self.assertEqual(funcbbox.user_dict, {'mama': 'mom', 'a': 2})
 
     def test_delete_permissions_check(self):
@@ -50,7 +50,7 @@ class ReadOnlyDictTest(unittest.TestCase):
         funcbbox = setup_dict_factory({'mama': 'mom', 'otec': 'dad'},
                                       change=True)
         funcbbox.mama = 'mommy'
-        self.assertEqual({'mama': 'mommy'}, funcbbox.mama)
+        self.assertEqual('mommy', funcbbox.mama)
         with self.assertRaises(ValueError) as cm:
             funcbbox.uncle = 'Benz'
         self.assertEqual(str(cm.exception), 'Not permitted to add')

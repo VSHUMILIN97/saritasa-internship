@@ -117,6 +117,16 @@ class ReadOnlyDict(object):
             return str(self.__dict__['user_dict'])
         return str(self.__dict__['user_dict']['__unshown__'])
 
+    def __repr__(self):
+        if self.__dict__['user_dict'].get('__unshown__') is None:
+            for key in self.__dict__['user_dict'].keys():
+                if isinstance(self.__dict__['user_dict'].get(key), dict):
+                    if '__unshown__' in self.__dict__['user_dict'].get(key):
+                        self.__dict__['user_dict'][key] = \
+                            self.__dict__['user_dict'][key]['__unshown__']
+            return str(self.__dict__['user_dict'])
+        return str(self.__dict__['user_dict']['__unshown__'])
+
 
 if __name__ == '__main__':
     pass
