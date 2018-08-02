@@ -1,11 +1,10 @@
-import time
-from functools import wraps
-import random
 """
     TO-DO:
     * Unit tests
     * Infinite handle
 """
+import time
+from functools import wraps
 
 
 def retry(exceptions, retries=None, delay=3):

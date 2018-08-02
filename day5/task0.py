@@ -53,13 +53,13 @@ class ReadOnlyDict(object):
         return object.__setattr__(self, name, value)
 
     def __init__(self,
-                 dict,
+                 us_dict,
                  add=False,
                  change=False,
                  delete=False,
                  *args,
                  **kwargs):
-        self._set_initials('user_dict', dict)
+        self._set_initials('user_dict', us_dict)
         self._set_initials('add', add)
         self._set_initials('change', change)
         self._set_initials('delete', delete)
