@@ -40,7 +40,7 @@ class SetLikeObjectTest(unittest.TestCase):
         self.assertIsNone(a.clear())
         with self.assertRaises(KeyError) as cm:
             a.pop(1)
-        self.assertEqual(str(cm.exception),
+        self.assertEqual(cm.exception,
                          'No more elements in this beautiful set')
-        self.assertEqual(sorted(b.copy()), [1, 5])
+        self.assertEqual(sorted(b), [1, 5])
         self.assertFalse(sorted(b.issubset(a)))

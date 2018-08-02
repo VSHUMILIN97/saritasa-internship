@@ -34,6 +34,16 @@ class SetLike(object):
                             f' - SetLike and {type(another_set)}')
 
     def do_shuffle(self, possible_arg=None):
+        """ Function which purpose is to mimic the set behaviour.
+            Set is not orderly.
+
+        Args:
+            possible_arg: Any iterable object that can be shuffled
+
+        Returns:
+            object: Shuffled iterable object (Most preferably - list)
+
+        """
         shuffle(self.unique)
         if hasattr(possible_arg, '__iter__'):
             shuffle(possible_arg)
@@ -41,6 +51,14 @@ class SetLike(object):
 
     @staticmethod
     def is_instance_fake(other_set):
+        """ Function that checks whether instance is set or SetLike object
+
+        Args:
+            other_set: user object entry
+
+        Returns:
+            bool: True if it is instance of set or SetLike, False otherwise
+        """
         if isinstance(other_set, (set, SetLike)):
             return True
         else:
@@ -56,10 +74,13 @@ class SetLike(object):
                             f' - SetLike and {type(other_set)}')
 
     def add(self, elem, *args, **kwargs):
-        """
-        Add an element to a set.
+        """ Add an element to a set.
+            This has no effect if the element is already present.
+        Args:
+            elem (object): Element for the set
 
-        This has no effect if the element is already present.
+        Returns:
+            SetLike: Same SetLike with new value (if not present)
         """
         if elem in self.unique:
             pass
@@ -69,27 +90,41 @@ class SetLike(object):
         return self.unique
 
     def clear(self, *args, **kwargs):
-        """ Remove all elements from this set. """
+        """ Remove all elements from this set.
+
+        Returns:
+            None
+        """
         self.unique.clear()
 
     def copy(self, *args, **kwargs):
-        """ Return a shallow copy of a set. """
+        """ Return a shallow copy of a set.
+
+        Returns:
+            None
+        """
         self.do_shuffle()
-        return self.unique.copy()
+        return copy.deepcopy(self.unique.copy())
 
     def difference(self, elem, *args, **kwargs):
         """
         Return the difference of two or more sets as a new set.
 
         (i.e. all elements that are in this set but not the others.)
+
+        Args:
+            elem (object): Element for the set comparison
+
+        Returns:
+            object: New object
         """
-        diff = [x for x in self.unique if x not in elem]
+        diff = [obj for obj in self.unique if obj not in elem]
         diff = self.do_shuffle(diff)
         return diff
 
-    def difference_update(self, diff, *args, **kwargs):
+    def difference_update(self, elem, *args, **kwargs):
         """ Remove all elements of another set from this set. """
-        self.__sub__(diff)
+        self.__sub__(elem)
 
     def discard(self, elem, *args, **kwargs):
         """
@@ -110,18 +145,18 @@ class SetLike(object):
 
     def intersection_update(self, elem, *args, **kwargs):
         """ Update a set with the intersection of itself and another. """
-        for x, val in enumerate(self.unique):
-            for y in elem:
-                if val != y:
-                    self.unique.pop(x)
+        for index, val in enumerate(self.unique):
+            for subitem in elem:
+                if val != subitem:
+                    self.unique.pop(index)
 
     def isdisjoint(self, elem, *args, **kwargs):
         """ Return True if two sets have a null intersection. """
         intersection = []
-        for x in self.unique:
-            for y in elem:
-                if x == y:
-                    intersection.append(x)
+        for item in self.unique:
+            for subitem in elem:
+                if item == subitem:
+                    intersection.append(item)
         if not intersection:
             return True
         else:
@@ -145,14 +180,14 @@ class SetLike(object):
         elif elem in self.unique:
             return SetLike(self.unique.pop(self.unique.index(elem)))
 
-    def remove(self, value, *args, **kwargs):
+    def remove(self, elem, *args, **kwargs):
         """
         Remove an element from a set; it must be a member.
 
         If the element is not a member, raise a KeyError.
         """
         try:
-            self.unique.pop(value)
+            self.unique.pop(elem)
         except ValueError:
             raise KeyError('Not in this not like this set')
 
@@ -162,8 +197,8 @@ class SetLike(object):
 
         (i.e. all elements that are in exactly one of the sets.)
         """
-        intersection = [x for x in self.unique if x not in elem]
-        intersection.extend([x for x in elem if x not in intersection])
+        intersection = [obj for obj in self.unique if obj not in elem]
+        intersection.extend([obj for obj in elem if obj not in intersection])
         intersection = self.do_shuffle(intersection)
         return intersection
 
@@ -182,19 +217,19 @@ class SetLike(object):
 
     def update(self, elem, *args, **kwargs):
         """ Update a set with the union of itself and others. """
-        for y in elem:
-            if y not in self.unique:
-                self.unique.append(y)
+        for item in elem:
+            if item not in self.unique:
+                self.unique.append(item)
 
-    def __and__(self, key, *args, **kwargs):  # real signature unknown
-        if self.is_instance_fake(key):
-            intersection = [x for x in self.unique if x in key]
+    def __and__(self, elem, *args, **kwargs):  # real signature unknown
+        if self.is_instance_fake(elem):
+            intersection = [obj for obj in self.unique if obj in elem]
             self.do_shuffle(intersection)
             return intersection
 
-    def __contains__(self, y):  # real signature unknown; restored from __doc__
+    def __contains__(self, elem):  # real signature unknown; restored from __doc__
         """ x.__contains__(y) <==> y in x. """
-        if y in self.unique:
+        if elem in self.unique:
             return True
         else:
             return False
@@ -235,7 +270,7 @@ class SetLike(object):
     def __iand__(self, elem, *args, **kwargs):
         """ Return self&=value. """
         if self.is_instance_fake(elem):
-            intersection = [x for x in self.unique if x in elem]
+            intersection = [obj for obj in self.unique if obj in elem]
             self.unique = copy.deepcopy(intersection)
             self.do_shuffle()
             return self.unique
@@ -243,8 +278,8 @@ class SetLike(object):
     def __ior__(self, elem, *args, **kwargs):
         """ Return self|=value. """
         if self.is_instance_fake(elem):
-            union = [x for x in self.unique]
-            union.extend([y for y in elem if y not in self.unique])
+            union = [obj for obj in self.unique]
+            union.extend([obj for obj in elem if obj not in self.unique])
             self.unique = copy.deepcopy(union)
             self.do_shuffle()
             return self.unique
@@ -263,9 +298,9 @@ class SetLike(object):
 
     def __ixor__(self, elem, *args, **kwargs):
         """ Return self^=value. """
-        priv = self.__and__(elem)
+        intersection = self.__and__(elem)
         for item in elem:
-            if item not in priv:
+            if item not in intersection:
                 self.unique.append(item)
         self.do_shuffle()
         return self.unique
@@ -309,8 +344,8 @@ class SetLike(object):
     def __or__(self, elem, *args, **kwargs):
         """ Return self|value. """
         if self.is_instance_fake(elem):
-            union = [x for x in self.unique]
-            union.extend([y for y in elem if y not in self.unique])
+            union = [obj for obj in self.unique]
+            union.extend([obj for obj in elem if obj not in self.unique])
             self.do_shuffle(union)
             return union
         else:
@@ -331,7 +366,7 @@ class SetLike(object):
 
     def __ror__(self, elem, *args, **kwargs):
         """ Return value|self. """
-        intersection = [x for x in self.unique if x in elem]
+        intersection = [obj for obj in self.unique if obj in elem]
         for item in elem:
             if item not in intersection:
                 self.unique.append(item)
@@ -363,10 +398,10 @@ class SetLike(object):
     def __xor__(self, elem, *args, **kwargs):
         """ Return self^value. """
         if self.is_instance_fake(elem):
-            priv = self.__and__(elem)
+            intersection = self.__and__(elem)
             d_copy = copy.deepcopy(self.unique)
             for item in elem:
-                if item not in priv:
+                if item not in intersection:
                     d_copy.append(item)
             self.do_shuffle(d_copy)
             return d_copy
