@@ -78,7 +78,8 @@ class MimicMatrix:
         """
         if self._is_matrix_compatible(other_matrix):
             rows, values = self.m_size
-            addition_matrix = [[self.matrix[row][value] + other_matrix[row][value]
+            addition_matrix = [[self.matrix[row][value]
+                                + other_matrix[row][value]
                                 for value in range(values)]
                                for row in range(rows)]
             return addition_matrix
@@ -107,7 +108,8 @@ class MimicMatrix:
         """
         if self._is_matrix_compatible(other_matrix):
             rows, values = self.m_size
-            subtracted_matrix = [[self.matrix[row][value] - other_matrix[row][value]
+            subtracted_matrix = [[self.matrix[row][value]
+                                  - other_matrix[row][value]
                                   for value in range(values)]
                                  for row in range(rows)]
 
@@ -162,27 +164,15 @@ class MimicMatrix:
         """
         if self._is_matrix_mul_compatible(other_matrix_or_num):
             other_matrix_or_num = list(zip(*other_matrix_or_num))
-            new_structure = []
-            state = []
-            counter = 0
-            rows, values = self.m_size
-            for row in range(rows):
-                for tuple_len, _ in enumerate(other_matrix_or_num):
-                    for value in range(values):
-                        counter += self.matrix[row][value] * \
-                                   other_matrix_or_num[tuple_len][value]
-                    new_structure.append(counter)
-                    counter = 0
-                state.append(copy.copy(new_structure))
-                new_structure.clear()
-            return state
+            original_matrix = copy.deepcopy(self.matrix)
+            return [[sum(ele_a * ele_b for ele_a, ele_b in zip(row_a, col_b))
+                     for col_b in other_matrix_or_num] for row_a in original_matrix]
         else:
             copyr = copy.copy(self.matrix)
             rows, values = self.m_size
-            for row in range(rows):
-                for value in range(values):
-                    copyr[row][value] *= other_matrix_or_num
-            return copyr
+            return [[copyr[row][value] * other_matrix_or_num
+                     for value in range(values)]
+                    for row in range(rows)]
 
     def __pow__(self, number):
         """ Magic method that mimic operation of involution """
