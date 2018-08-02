@@ -33,6 +33,8 @@ def retry(exceptions, retries=None, delay=3):
                     msg = f'{e} Retrying in {user_delay} second(s)...'
                     print(msg)
                     time.sleep(user_delay)
+                    if user_retries is True:
+                        continue
                     user_retries -= 1
             return func(*args, **kwargs)
         return f_retry

@@ -6,7 +6,7 @@ import random
 class DecoratorTest(unittest.TestCase):
 
     def test_raises_success(self):
-        @dt.retry((KeyError, ValueError), delay=1, retries=12)
+        @dt.retry((KeyError, ValueError), delay=0.25, retries=12)
         def sample():
             if random.random() < 0.5:
                 raise ValueError('What did you expect?')
