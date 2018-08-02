@@ -34,7 +34,7 @@ class MatrixTest(unittest.TestCase):
         with self.assertRaises(AttributeError) as cm:
             print(m3m.spoon)
         self.assertEqual(str(cm.exception),
-                         'There are no - spoon in this instance')
+                         "'MimicMatrix' object has no attribute 'spoon'")
 
     def test_matrix_addition_is_possible_and_correct(self):
         """ Test checks whether it is possible to

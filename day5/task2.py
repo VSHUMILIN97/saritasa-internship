@@ -6,6 +6,8 @@ import copy
 
 class MimicMatrix:
 
+    __slots__ = ['matrix', 'm_size']
+
     def __init__(self, matrix):
         self.matrix = [x for x in matrix]
         self.m_size = (len(self.matrix), 0)
@@ -73,12 +75,6 @@ class MimicMatrix:
             raise TypeError('Unsupported operand type for instances'
                             ' - MimicMatrix and int}')
         return self.matrix
-
-    def __getattr__(self, attr):
-        if self.__dict__.get(attr) is not None:
-            return self.__dict__[attr]
-        else:
-            raise AttributeError(f'There are no - {attr} in this instance')
 
     def __mul__(self, other_matrix_or_num):
         if self._is_matrix_mul_compatible(other_matrix_or_num):
