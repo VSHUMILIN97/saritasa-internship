@@ -24,7 +24,6 @@ class DecoratorTest(unittest.TestCase):
                 raise KeyError
             else:
                 return
-            
         fall_once()
         self.assertEqual(self.counter, 1)
 
